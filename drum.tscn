@@ -1,0 +1,70 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://hat.png" type="Texture" id=1]
+[ext_resource path="res://drum.gd" type="Script" id=2]
+[ext_resource path="res://snare.png" type="Texture" id=3]
+[ext_resource path="res://rest.png" type="Texture" id=4]
+[ext_resource path="res://bass.png" type="Texture" id=5]
+[ext_resource path="res://graphics/DrummerBody01.png" type="Texture" id=6]
+[ext_resource path="res://graphics/DrummerInstrumentDrumsRedWithLogo.png" type="Texture" id=7]
+[ext_resource path="res://graphics/DrummerStickMid.png" type="Texture" id=8]
+[ext_resource path="res://graphics/DrummerLegs.png" type="Texture" id=9]
+[ext_resource path="res://graphics/DrummerClothesBlackGilet.png" type="Texture" id=10]
+[ext_resource path="res://graphics/DrummerEyes01.png" type="Texture" id=11]
+[ext_resource path="res://graphics/DrummerHairBlondDredd.png" type="Texture" id=12]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="rest" type="Sprite" parent="."]
+visible = false
+texture = ExtResource( 4 )
+
+[node name="kick" type="Sprite" parent="."]
+visible = false
+position = Vector2( 61.4026, 49.3891 )
+texture = ExtResource( 5 )
+
+[node name="snare" type="Sprite" parent="."]
+visible = false
+texture = ExtResource( 3 )
+
+[node name="hat" type="Sprite" parent="."]
+visible = false
+texture = ExtResource( 1 )
+
+[node name="Drummer" type="Node2D" parent="."]
+position = Vector2( 112, 203 )
+scale = Vector2( 16, 16 )
+
+[node name="Legs" type="Sprite" parent="Drummer"]
+texture = ExtResource( 9 )
+
+[node name="Body" type="Sprite" parent="Drummer"]
+texture = ExtResource( 6 )
+
+[node name="Clothes" type="Sprite" parent="Drummer"]
+texture = ExtResource( 10 )
+
+[node name="Eyes" type="Sprite" parent="Drummer"]
+texture = ExtResource( 11 )
+
+[node name="Hair" type="Sprite" parent="Drummer"]
+texture = ExtResource( 12 )
+
+[node name="Sticks" type="Sprite" parent="Drummer"]
+texture = ExtResource( 8 )
+
+[node name="Instrument" type="Sprite" parent="Drummer"]
+texture = ExtResource( 7 )
+
+[node name="EyesTimer" type="Timer" parent="."]
+one_shot = true
+autostart = true
+
+[node name="SticksTimer" type="Timer" parent="."]
+wait_time = 0.1
+autostart = true
+
+[connection signal="timeout" from="EyesTimer" to="." method="_on_EyesTimer_timeout"]
+[connection signal="timeout" from="SticksTimer" to="." method="_on_SticksTimer_timeout"]

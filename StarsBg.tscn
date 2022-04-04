@@ -1,0 +1,100 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://graphics/StarsBg2.png" type="Texture" id=1]
+[ext_resource path="res://StarsBg.gd" type="Script" id=2]
+[ext_resource path="res://graphics/StarsBg3.png" type="Texture" id=3]
+[ext_resource path="res://graphics/StarsBg1.png" type="Texture" id=4]
+[ext_resource path="res://graphics/StarsBg4.png" type="Texture" id=5]
+[ext_resource path="res://graphics/StarsBgGradient.png" type="Texture" id=6]
+
+[sub_resource type="Animation" id=23]
+resource_name = "speed_bump"
+tracks/0/type = "value"
+tracks/0/path = NodePath("StarsBg:star_speed")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 1 ),
+"transitions": PoolRealArray( 2, -2, 0.5, 1 ),
+"update": 0,
+"values": [ 0.2, 3.0, 2.0, 0.2 ]
+}
+
+[node name="StarsBg" type="Node2D"]
+z_index = -1
+z_as_relative = false
+script = ExtResource( 2 )
+star_speed = 0.2
+
+[node name="ParallaxBg" type="ParallaxBackground" parent="."]
+layer = 0
+
+[node name="P0" type="ParallaxLayer" parent="ParallaxBg"]
+visible = false
+motion_scale = Vector2( 0, 0 )
+
+[node name="Sprite" type="Sprite" parent="ParallaxBg/P0"]
+visible = false
+modulate = Color( 0.635294, 0.631373, 0.631373, 1 )
+scale = Vector2( 2, 2 )
+texture = ExtResource( 6 )
+centered = false
+
+[node name="P1" type="ParallaxLayer" parent="ParallaxBg"]
+position = Vector2( 164, 10 )
+z_as_relative = false
+motion_scale = Vector2( 1.2, 1.2 )
+
+[node name="Sprite" type="Sprite" parent="ParallaxBg/P1"]
+position = Vector2( -239.084, -34.7963 )
+scale = Vector2( 2, 2 )
+z_as_relative = false
+texture = ExtResource( 4 )
+centered = false
+
+[node name="P2" type="ParallaxLayer" parent="ParallaxBg"]
+position = Vector2( 164, 10 )
+z_as_relative = false
+
+[node name="Sprite" type="Sprite" parent="ParallaxBg/P2"]
+position = Vector2( -239.084, -34.7963 )
+scale = Vector2( 2, 2 )
+z_as_relative = false
+texture = ExtResource( 1 )
+centered = false
+
+[node name="P3" type="ParallaxLayer" parent="ParallaxBg"]
+position = Vector2( 164, 10 )
+z_as_relative = false
+motion_scale = Vector2( 0.8, 0.8 )
+
+[node name="Sprite" type="Sprite" parent="ParallaxBg/P3"]
+position = Vector2( -239.084, -34.7963 )
+scale = Vector2( 2, 2 )
+z_as_relative = false
+texture = ExtResource( 3 )
+centered = false
+
+[node name="P4" type="ParallaxLayer" parent="ParallaxBg"]
+position = Vector2( 164, 10 )
+z_as_relative = false
+motion_scale = Vector2( 0.6, 0.6 )
+
+[node name="Sprite" type="Sprite" parent="ParallaxBg/P4"]
+position = Vector2( -239.084, -34.7963 )
+scale = Vector2( 2, 2 )
+z_as_relative = false
+texture = ExtResource( 5 )
+centered = false
+
+[node name="StarSpeed" type="AnimationPlayer" parent="."]
+root_node = NodePath("../..")
+anims/speed_bump = SubResource( 23 )
+
+[node name="StarSpeedTimer" type="Timer" parent="."]
+wait_time = 0.02
+autostart = true
+
+[connection signal="timeout" from="StarSpeedTimer" to="." method="_on_StarSpeedTimer_timeout"]

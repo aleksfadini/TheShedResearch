@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/Stage2_115_Snare.ogg-2c649a35465d4ecc73eefd5369117138.oggstr"
+
+[deps]
+
+source_file="res://samples/Stage2/Stage2_115_Snare.ogg"
+dest_files=[ "res://.import/Stage2_115_Snare.ogg-2c649a35465d4ecc73eefd5369117138.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

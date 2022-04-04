@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/DrumClink_9.ogg-614425eac7aee7b561be65becdcd3171.oggstr"
+
+[deps]
+
+source_file="res://samples/DrumClinks/DrumClink_9.ogg"
+dest_files=[ "res://.import/DrumClink_9.ogg-614425eac7aee7b561be65becdcd3171.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

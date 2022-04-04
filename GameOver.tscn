@@ -1,0 +1,111 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Themes/UITheme.tres" type="Theme" id=1]
+[ext_resource path="res://samples/DrumClinks/DrumClink_0.ogg" type="AudioStream" id=2]
+[ext_resource path="res://GameOver.gd" type="Script" id=3]
+
+[sub_resource type="Animation" id=17]
+resource_name = "flicker"
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+
+[sub_resource type="Animation" id=16]
+resource_name = "show"
+tracks/0/type = "value"
+tracks/0/path = NodePath("ColorRect:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3, 0.4, 0.5, 0.6, 1 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 0.243137 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 0.6 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("OverMsg:rect_position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5, 0.6, 0.7 ),
+"transitions": PoolRealArray( -2, -2, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, -800 ), Vector2( 0, 100 ), Vector2( 0, -50 ), Vector2( 0, 0 ) ]
+}
+
+[node name="GameOver" type="Control"]
+pause_mode = 2
+visible = false
+margin_right = 40.0
+margin_bottom = 40.0
+theme = ExtResource( 1 )
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="."]
+modulate = Color( 1, 1, 1, 0 )
+margin_left = -589.0
+margin_top = -516.0
+margin_right = 611.0
+margin_bottom = 684.0
+color = Color( 0.298039, 0.298039, 0.298039, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GameOverSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 2 )
+
+[node name="pressSpace" type="Label" parent="."]
+modulate = Color( 1, 1, 1, 0 )
+margin_left = -208.0
+margin_top = 85.0
+margin_right = -136.0
+margin_bottom = 99.0
+rect_scale = Vector2( 6, 6 )
+text = "press space"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="flicker" type="AnimationPlayer" parent="pressSpace"]
+anims/flicker = SubResource( 17 )
+
+[node name="OverMsg" type="Control" parent="."]
+margin_top = -800.0
+margin_right = 40.0
+margin_bottom = -760.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="OverMsg"]
+margin_left = -270.0
+margin_top = -45.0
+margin_right = -198.0
+margin_bottom = -31.0
+rect_scale = Vector2( 8, 8 )
+text = "GAME OVER!!!"
+align = 1
+valign = 1
+
+[node name="Anim" type="AnimationPlayer" parent="."]
+anims/show = SubResource( 16 )

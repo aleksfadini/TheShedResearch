@@ -1,0 +1,14 @@
+__pycache__
+*.pyc
+.DS_Store
+*~
+.idea
+.import/
+logs/
+android/
+plugins/
+ios/
+export/
+renders/
+assets/
+assets.csv

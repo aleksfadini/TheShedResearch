@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/Stage2_115_Kick.ogg-5a1428b15fdb9f65b0b377ad23c67d83.oggstr"
+
+[deps]
+
+source_file="res://samples/Stage2/Stage2_115_Kick.ogg"
+dest_files=[ "res://.import/Stage2_115_Kick.ogg-5a1428b15fdb9f65b0b377ad23c67d83.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

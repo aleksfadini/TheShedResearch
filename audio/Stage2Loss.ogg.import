@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/Stage2Loss.ogg-162f67a2a82b995b6215b0e3239a7b4e.oggstr"
+
+[deps]
+
+source_file="res://audio/Stage2Loss.ogg"
+dest_files=[ "res://.import/Stage2Loss.ogg-162f67a2a82b995b6215b0e3239a7b4e.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

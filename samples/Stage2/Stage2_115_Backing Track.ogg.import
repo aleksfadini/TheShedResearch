@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/Stage2_115_Backing Track.ogg-f3182ef3f2a7a77e63051fa6d651c3eb.oggstr"
+
+[deps]
+
+source_file="res://samples/Stage2/Stage2_115_Backing Track.ogg"
+dest_files=[ "res://.import/Stage2_115_Backing Track.ogg-f3182ef3f2a7a77e63051fa6d651c3eb.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

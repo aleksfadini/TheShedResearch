@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/Stage3_130_Hats.ogg-b7e5193b5fdcd3b271cb17a29bbfe121.oggstr"
+
+[deps]
+
+source_file="res://samples/Stage3/Stage3_130_Hats.ogg"
+dest_files=[ "res://.import/Stage3_130_Hats.ogg-b7e5193b5fdcd3b271cb17a29bbfe121.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

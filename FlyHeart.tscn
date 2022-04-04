@@ -1,0 +1,179 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://FlyHeart.gd" type="Script" id=1]
+[ext_resource path="res://graphics/heartFullCont.png" type="Texture" id=2]
+[ext_resource path="res://graphics/heartFullBody.png" type="Texture" id=3]
+[ext_resource path="res://graphics/heartHalfBody.png" type="Texture" id=4]
+[ext_resource path="res://graphics/heartHalfCont.png" type="Texture" id=5]
+
+[sub_resource type="Animation" id=1]
+resource_name = "fly"
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0.2, 0.6, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 50, -300 ), Vector2( 250, -300 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.6, 0.7, 1 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 6, 6 ), Vector2( 14, 14 ), Vector2( 10, 10 ), Vector2( 7, 7 ), Vector2( 6, 6 ), Vector2( 0, 0 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.1, 0.7, 0.85, 1 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 0 ) ]
+}
+
+[node name="FlyHeart" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="Graphics" type="Node2D" parent="."]
+modulate = Color( 1, 1, 1, 0 )
+scale = Vector2( 1e-05, 1e-05 )
+
+[node name="HeartHalf" type="Node2D" parent="Graphics"]
+visible = false
+position = Vector2( -2, 0.5 )
+
+[node name="Bg" type="Node2D" parent="Graphics/HeartHalf"]
+visible = false
+modulate = Color( 0.270588, 0.270588, 0.270588, 0.45098 )
+
+[node name="Body" type="Sprite" parent="Graphics/HeartHalf/Bg"]
+modulate = Color( 1, 0, 0, 1 )
+texture = ExtResource( 3 )
+
+[node name="Contour" type="Sprite" parent="Graphics/HeartHalf/Bg"]
+modulate = Color( 0.101961, 1, 0, 1 )
+texture = ExtResource( 2 )
+
+[node name="Half" type="Node2D" parent="Graphics/HeartHalf"]
+
+[node name="Body" type="Sprite" parent="Graphics/HeartHalf/Half"]
+modulate = Color( 1, 0, 0, 1 )
+texture = ExtResource( 4 )
+
+[node name="Contour" type="Sprite" parent="Graphics/HeartHalf/Half"]
+modulate = Color( 0.290196, 1, 0, 1 )
+texture = ExtResource( 5 )
+
+[node name="Full" type="Node2D" parent="Graphics/HeartHalf"]
+visible = false
+
+[node name="Body" type="Sprite" parent="Graphics/HeartHalf/Full"]
+modulate = Color( 1, 0, 0, 1 )
+texture = ExtResource( 3 )
+
+[node name="Contour" type="Sprite" parent="Graphics/HeartHalf/Full"]
+modulate = Color( 0.290196, 1, 0, 1 )
+texture = ExtResource( 2 )
+
+[node name="HeartFull" type="Node2D" parent="Graphics"]
+visible = false
+
+[node name="Full" type="Node2D" parent="Graphics/HeartFull"]
+
+[node name="Body" type="Sprite" parent="Graphics/HeartFull/Full"]
+modulate = Color( 1, 0, 0, 1 )
+texture = ExtResource( 3 )
+
+[node name="Contour" type="Sprite" parent="Graphics/HeartFull/Full"]
+modulate = Color( 0.290196, 1, 0, 1 )
+texture = ExtResource( 2 )
+
+[node name="HeartFull2" type="Node2D" parent="Graphics"]
+visible = false
+
+[node name="Full" type="Node2D" parent="Graphics/HeartFull2"]
+position = Vector2( -4.66667, 0 )
+
+[node name="Body" type="Sprite" parent="Graphics/HeartFull2/Full"]
+modulate = Color( 1, 0, 0, 1 )
+texture = ExtResource( 3 )
+
+[node name="Contour" type="Sprite" parent="Graphics/HeartFull2/Full"]
+modulate = Color( 0.290196, 1, 0, 1 )
+texture = ExtResource( 2 )
+
+[node name="Full2" type="Node2D" parent="Graphics/HeartFull2"]
+position = Vector2( 5, 0 )
+
+[node name="Body" type="Sprite" parent="Graphics/HeartFull2/Full2"]
+modulate = Color( 1, 0, 0, 1 )
+texture = ExtResource( 3 )
+
+[node name="Contour" type="Sprite" parent="Graphics/HeartFull2/Full2"]
+modulate = Color( 0.290196, 1, 0, 1 )
+texture = ExtResource( 2 )
+
+[node name="HeartFull4" type="Node2D" parent="Graphics"]
+visible = false
+
+[node name="Full" type="Node2D" parent="Graphics/HeartFull4"]
+position = Vector2( -5, -4 )
+
+[node name="Body" type="Sprite" parent="Graphics/HeartFull4/Full"]
+modulate = Color( 1, 0, 0, 1 )
+texture = ExtResource( 3 )
+
+[node name="Contour" type="Sprite" parent="Graphics/HeartFull4/Full"]
+modulate = Color( 0.290196, 1, 0, 1 )
+texture = ExtResource( 2 )
+
+[node name="Full2" type="Node2D" parent="Graphics/HeartFull4"]
+position = Vector2( 5, -4.16667 )
+
+[node name="Body" type="Sprite" parent="Graphics/HeartFull4/Full2"]
+modulate = Color( 1, 0, 0, 1 )
+texture = ExtResource( 3 )
+
+[node name="Contour" type="Sprite" parent="Graphics/HeartFull4/Full2"]
+modulate = Color( 0.290196, 1, 0, 1 )
+texture = ExtResource( 2 )
+
+[node name="Full3" type="Node2D" parent="Graphics/HeartFull4"]
+position = Vector2( -5, 4.16667 )
+
+[node name="Body" type="Sprite" parent="Graphics/HeartFull4/Full3"]
+modulate = Color( 1, 0, 0, 1 )
+texture = ExtResource( 3 )
+
+[node name="Contour" type="Sprite" parent="Graphics/HeartFull4/Full3"]
+modulate = Color( 0.290196, 1, 0, 1 )
+texture = ExtResource( 2 )
+
+[node name="Full4" type="Node2D" parent="Graphics/HeartFull4"]
+position = Vector2( 5, 4.16667 )
+
+[node name="Body" type="Sprite" parent="Graphics/HeartFull4/Full4"]
+modulate = Color( 1, 0, 0, 1 )
+texture = ExtResource( 3 )
+
+[node name="Contour" type="Sprite" parent="Graphics/HeartFull4/Full4"]
+modulate = Color( 0.290196, 1, 0, 1 )
+texture = ExtResource( 2 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Graphics"]
+anims/fly = SubResource( 1 )

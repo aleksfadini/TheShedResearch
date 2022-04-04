@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/Stage1_100_Toms.ogg-d94403e87066e21e13457ecb63f5cdbc.oggstr"
+
+[deps]
+
+source_file="res://samples/Stage1/Stage1_100_Toms.ogg"
+dest_files=[ "res://.import/Stage1_100_Toms.ogg-d94403e87066e21e13457ecb63f5cdbc.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0
