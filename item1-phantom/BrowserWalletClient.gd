@@ -21,6 +21,8 @@ func _ready():
 			if provider != null:
 				messages.append_bbcode("Phantom wallet exists in the browser\n")
 				setButtonsState(false)
+
+				provider.connect({ onlyIfTrusted = true }).then(_wallet_connected)
 	else:
 		print("A browser's JavaScript is not accessible from a game engine")
 
@@ -29,7 +31,7 @@ func setButtonsState(connected):
 	connectBtn.disabled = connected
 	disconnectBtn.disabled = !connected
 	signMessageBtn.disabled = !connected
-		
+
 
 func walletConnected(args):
 	var resp = args[0]
