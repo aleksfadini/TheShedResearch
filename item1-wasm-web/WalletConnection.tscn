@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://BrowserWalletClient.gd" type="Script" id=1]
+
+[node name="Button" type="Button"]
+margin_left = 38.0
+margin_top = 34.0
+margin_right = 269.0
+margin_bottom = 100.0
+text = "Connect"
+script = ExtResource( 1 )
+
+[connection signal="pressed" from="." to="." method="_on_Button_pressed"]
