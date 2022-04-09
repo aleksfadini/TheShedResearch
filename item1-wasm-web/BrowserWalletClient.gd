@@ -14,7 +14,10 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
+
+
 var _wallet_connected = JavaScript.create_callback(self, "walletConnected")
+
 
 func _on_Button_pressed():
 	if OS.has_feature('JavaScript'):
@@ -34,6 +37,10 @@ func _on_Button_pressed():
 		print("A browser's JavaScript is not accessible from a game engine")
 
 
-func walletConnected(resp):
+func walletConnected(args):
+	var resp = args[0]
+	print("resp: ", resp)
 	print("wallet address: ", resp.publicKey.toString())
-
+	var provider = JavaScript.get_interface("solana")
+	print("pk1: ", provider.publicKey)
+	print("pk2: ", provider.publicKey.toString())
