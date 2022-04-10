@@ -37,6 +37,15 @@ margin_top = 40.0
 margin_right = 964.0
 margin_bottom = 465.0
 
+[node name="Autoconnect" type="CheckButton" parent="."]
+margin_left = 58.0
+margin_top = 443.0
+margin_right = 219.0
+margin_bottom = 483.0
+disabled = true
+text = "Autoconnect"
+
 [connection signal="pressed" from="Connect" to="." method="_on_Connect_pressed"]
 [connection signal="pressed" from="Dissconect" to="." method="_on_Dissconect_pressed"]
 [connection signal="pressed" from="SignMessage" to="." method="_on_SignMessage_pressed"]
+[connection signal="toggled" from="Autoconnect" to="." method="_on_Autoconnect_toggled"]

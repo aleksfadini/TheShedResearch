@@ -8,6 +8,7 @@ onready var messages = $Messages
 onready var connectBtn = $Connect
 onready var disconnectBtn = $Dissconect
 onready var signMessageBtn = $SignMessage
+onready var autoConnect = $Autoconnect
 
 var _wallet_connected = JavaScript.create_callback(self, "walletConnected")
 var _wallet_disconnected = JavaScript.create_callback(self, "walletDisconnected")
@@ -15,22 +16,37 @@ var _wallet_message_signed = JavaScript.create_callback(self, "walletMessageSign
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	#print("_ready")
+
 	if OS.has_feature('JavaScript'):
-		if JavaScript.eval("window.solana && window.solana.isPhantom"):
+		if isWalletAvailable():
 			provider = JavaScript.get_interface("solana")
 			if provider != null:
 				messages.append_bbcode("Phantom wallet exists in the browser\n")
 				setButtonsState(false)
+				autoConnect.disabled = false
 
-				provider.connect({ onlyIfTrusted = true }).then(_wallet_connected)
+				stateRestore()
+				if state.get("autoconnect") != null:
+					autoConnect.pressed = state.autoconnect
 	else:
-		print("A browser's JavaScript is not accessible from a game engine")
+		var msg = "A browser's JavaScript is not accessible from a game engine"
+		messages.append_bbcode(msg)
+		print(msg)
 
 
 func setButtonsState(connected):
 	connectBtn.disabled = connected
 	disconnectBtn.disabled = !connected
 	signMessageBtn.disabled = !connected
+
+
+func walletConnect(onlyIfTrusted = false):
+	provider.connect({ onlyIfTrusted = onlyIfTrusted }).then(_wallet_connected)
+
+
+func walletDisconnect():
+	provider.disconnect().then(_wallet_disconnected)
 
 
 func walletConnected(args):
@@ -70,18 +86,25 @@ func isWalletConnected():
 	return JavaScript.eval("window.solana.isConnected")
 
 
+func isWalletAvailable():
+	if OS.has_feature('JavaScript'):
+		if JavaScript.eval("window.solana && window.solana.isPhantom"):
+			return true
+	return false
+
+
 func _on_Connect_pressed():
 	print("connect pressed")
 	if provider == null:
 		return
-	provider.connect().then(_wallet_connected)
+	walletConnect()
 
 
 func _on_Dissconect_pressed():
 	print("disconnect pressed")
 	if provider == null and wallet_address == null:
 		return
-	provider.disconnect().then(_wallet_disconnected)
+	walletDisconnect()
 	print("disconnect preformed")
 
 
@@ -95,3 +118,33 @@ func _on_SignMessage_pressed():
 		var encodedMessage = TextEncoder.encode(message)
 		provider.signMessage(encodedMessage, "utf8").then(_wallet_message_signed)
 
+
+var statePath = "user://godot.state"
+var state = {}
+
+
+func stateSave(new_state):
+	var storage = File.new()
+	storage.open(statePath, File.WRITE)
+	storage.store_line(to_json(new_state))
+	storage.close()
+
+
+func stateRestore():
+	var storage = File.new()
+	storage.open(statePath, File.READ)
+	state = JSON.parse(storage.get_line()).result
+	storage.close()
+
+	if !state:
+		state = {}
+
+	return state
+
+
+func _on_Autoconnect_toggled(button_pressed):
+	state["autoconnect"] = button_pressed
+	stateSave(state)
+
+	if isWalletAvailable() && !isWalletConnected() && button_pressed:
+		walletConnect()
