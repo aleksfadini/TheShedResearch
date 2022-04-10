@@ -45,6 +45,14 @@ margin_bottom = 483.0
 disabled = true
 text = "Autoconnect"
 
+[node name="MessageForSigning" type="TextEdit" parent="."]
+margin_left = 40.0
+margin_top = 243.0
+margin_right = 263.0
+margin_bottom = 434.0
+text = "To avoid digital dognappers, sign below to authenticate with TheShed"
+wrap_enabled = true
+
 [connection signal="pressed" from="Connect" to="." method="_on_Connect_pressed"]
 [connection signal="pressed" from="Dissconect" to="." method="_on_Dissconect_pressed"]
 [connection signal="pressed" from="SignMessage" to="." method="_on_SignMessage_pressed"]
