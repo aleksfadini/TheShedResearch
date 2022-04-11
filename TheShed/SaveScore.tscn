@@ -332,6 +332,9 @@ material = SubResource( 2 )
 margin_right = 40.0
 margin_bottom = 40.0
 mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="ColorRect" type="ColorRect" parent="CanvasLayer/Node2D/CrtFx2"]
 margin_left = -40.08
@@ -396,6 +399,9 @@ centered = false
 margin_right = 40.0
 margin_bottom = 40.0
 mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="StarsBg" parent="Control" instance=ExtResource( 3 )]
 
@@ -403,6 +409,9 @@ mouse_filter = 2
 margin_right = 40.0
 margin_bottom = 40.0
 theme = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Arrows" type="Control" parent="Instructions"]
 margin_left = 311.0

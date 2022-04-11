@@ -1,12 +1,5 @@
 extends Node2D
 
-
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
-
-
-# Called when the node enters the scene tree for the first time.
 func _ready():
 #	OS.set_window_size()
 #	$Instructions.play("s")
@@ -44,7 +37,6 @@ func _on_Colors_timeout():
 
 func _on_Bumper_finished():
 	get_tree().change_scene("res://Main.tscn")
-	
 	pass # Replace with function body.
 
 # press T for leaderboard
@@ -60,6 +52,15 @@ func _input(ev):
 
 #func _input(event):
 	if Input.is_action_pressed("ui_accept"):
-		$Bumper.play()
+#		$Bumper.play()
 		$CanvasLayer/FadeScreen.show()
-		$CanvasLayer/FadeScreen/Fade.play("fadeReady")
+#		$CanvasLayer/FadeScreen/Fade.play("fadeReady")
+		get_tree().change_scene("res://WalletScreen.tscn")
+
+		
+
+
+func _on_Fade_animation_finished(anim_name):
+	get_tree().change_scene("res://WalletScreen.tscn")
+	
+	pass # Replace with function body.

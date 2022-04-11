@@ -44,6 +44,9 @@ margin_right = 219.0
 margin_bottom = 483.0
 disabled = true
 text = "Autoconnect"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [connection signal="pressed" from="Connect" to="." method="_on_Connect_pressed"]
 [connection signal="pressed" from="Dissconect" to="." method="_on_Dissconect_pressed"]

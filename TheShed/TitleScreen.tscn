@@ -699,6 +699,7 @@ zoom = Vector2( 2, 2 )
 stream = ExtResource( 6 )
 volume_db = -11.0
 
+[connection signal="animation_finished" from="CanvasLayer/FadeScreen/Fade" to="." method="_on_Fade_animation_finished"]
 [connection signal="animation_finished" from="Instructions/InstructionsAnim" to="Instructions/InstructionsAnim" method="_on_InstructionsAnim_animation_finished"]
 [connection signal="timeout" from="Titles/SlideFromUp/MegaTitle/Colors" to="." method="_on_Colors_timeout"]
 [connection signal="finished" from="Bumper" to="." method="_on_Bumper_finished"]
