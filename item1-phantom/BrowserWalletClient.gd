@@ -9,6 +9,7 @@ onready var connectBtn = $Connect
 onready var disconnectBtn = $Dissconect
 onready var signMessageBtn = $SignMessage
 onready var autoConnect = $Autoconnect
+onready var messageForSigning = $MessageForSigning
 
 var _wallet_connected = JavaScript.create_callback(self, "walletConnected")
 var _wallet_disconnected = JavaScript.create_callback(self, "walletDisconnected")
@@ -23,7 +24,7 @@ func _ready():
 			provider = JavaScript.get_interface("solana")
 			if provider != null:
 				messages.append_bbcode("Phantom wallet exists in the browser\n")
-				setButtonsState(false)
+				setControlsState(false)
 				autoConnect.disabled = false
 
 				stateRestore()
@@ -35,10 +36,11 @@ func _ready():
 		print(msg)
 
 
-func setButtonsState(connected):
+func setControlsState(connected):
 	connectBtn.disabled = connected
 	disconnectBtn.disabled = !connected
 	signMessageBtn.disabled = !connected
+	messageForSigning.visible = connected
 
 
 func walletConnect(onlyIfTrusted = false):
@@ -56,7 +58,7 @@ func walletConnected(args):
 	messages.add_text("Wallet connected\n")
 	print("wallet address: ", wallet_address)	
 	messages.add_text("Wallet address: " + wallet_address + "\n")
-	setButtonsState(true)
+	setControlsState(true)
 
 
 func walletDisconnected(_args):
@@ -64,7 +66,7 @@ func walletDisconnected(_args):
 	print("is connected: ", isWalletConnected())
 	messages.append_bbcode("Wallet disconnected\n")
 	wallet_address = null
-	setButtonsState(false)
+	setControlsState(false)
 
 
 func walletMessageSigned(args):
@@ -113,7 +115,7 @@ func _on_SignMessage_pressed():
 	if provider == null and wallet_address == null:
 		return
 	if isWalletConnected():		
-		var message = "To avoid digital dognappers, sign below to authenticate with TheShed"
+		var message = messageForSigning.text
 		var TextEncoder = JavaScript.create_object("TextEncoder")
 		var encodedMessage = TextEncoder.encode(message)
 		provider.signMessage(encodedMessage, "utf8").then(_wallet_message_signed)
