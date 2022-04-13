@@ -1,0 +1,19 @@
+{
+  "score recorded": [
+    {
+      "wallet": "a4fa4FAMF4fk5jfklafk5jfaaaa",
+      "score": 2120,
+      "play time": 512,
+      "stage reached": 2
+
+    },
+    {
+      "wallet": "camkfh5kfh5lkj43fa34f3l4jhfk",
+      "score": 412,
+      "play time": 28,
+      "stage reached": 1
+    }
+  ],
+  "children": [],
+  "version": 0.1
+}
