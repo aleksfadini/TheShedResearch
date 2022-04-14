@@ -4,11 +4,20 @@ var player_name := ""
 func _ready():
 	$Instructions/InstructionsAnim.play("show")
 	$Instructions/Arrows/score.text=str(Globals.score)
+	update_connection_status()
+	connect("wallet_messages_updated",self,"update_connection_status")
+
+#	update_leaderboard()
+func update_connection_status():
 	if WalletConnectionApi.wallet_connected:
 		player_name=WalletConnectionApi.wallet_address
 		$Instructions/Arrows/wallet.self_modulate=Color(0,1,0)
-#	update_leaderboard()
-
+		$Instructions/Arrows/wallet.text=WalletConnectionApi.wallet_to_short_string_hr(player_name)
+	else:
+		player_name=""
+		$Instructions/Arrows/wallet.self_modulate=Color(1,0,0)
+		$Instructions/Arrows/wallet.text="NOT CONNECTED"
+		
 #func _process(delta):
 #	delta_sum += delta
 #	if delta_sum >=1.0:

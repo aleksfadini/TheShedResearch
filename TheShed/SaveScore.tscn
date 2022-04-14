@@ -333,9 +333,6 @@ material = SubResource( 2 )
 margin_right = 40.0
 margin_bottom = 40.0
 mouse_filter = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="ColorRect" type="ColorRect" parent="CanvasLayer/Node2D/CrtFx2"]
 margin_left = -40.08

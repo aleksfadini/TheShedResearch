@@ -65,3 +65,8 @@ func _on_Fade_animation_finished(anim_name):
 	get_tree().change_scene("res://Main.tscn")
 	
 	pass # Replace with function body.
+
+
+func _on_check_pressed():
+	print("check pressed")
+	pass # Replace with function body.

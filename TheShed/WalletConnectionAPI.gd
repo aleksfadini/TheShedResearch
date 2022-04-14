@@ -29,7 +29,7 @@ func _ready():
 			if provider != null:
 				append_message("Phantom wallet exists in the browser\n")
 				setConnectionGlobalVar(false)
-				autoconnect_active = false
+				autoconnect_active = true
 
 				stateRestore()
 				if state.get("autoconnect") != null:
@@ -55,7 +55,6 @@ func walletDisconnect():
 func walletConnected(args):
 	var resp = args[0]
 	wallet_address = resp.publicKey.toString()
-	
 	append_message("\nWallet connected\n")
 	print("wallet address: ", wallet_address)	
 	append_message("\nWallet address: " + wallet_address + "\n")
@@ -151,3 +150,15 @@ func _on_Autoconnect_toggled(button_pressed):
 func append_message(added_text:=""):
 	messages+=added_text
 	emit_signal("wallet_messages_updated")
+	
+##### Utilities for wallet display
+
+# This function converts a long wallet string to beginning and ending with dots, for easy display - humanly readable (hr)
+func wallet_to_short_string_hr(wallet_string:=""):
+	var chars_shown=6
+	if wallet_string.length() >= 30:
+		var reduced_string = wallet_string.substr(0,chars_shown) + "..." + wallet_string.substr(wallet_string.length()-chars_shown,-1)
+		return reduced_string	
+	else:
+		print("This doesn't seem like a wallet")
+		return "error"

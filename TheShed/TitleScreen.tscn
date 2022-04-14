@@ -383,6 +383,7 @@ z_as_relative = false
 material = SubResource( 2 )
 margin_right = 40.0
 margin_bottom = 40.0
+mouse_filter = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -476,9 +477,6 @@ anims/fadeReady = SubResource( 10 )
 [node name="Control" type="Control" parent="."]
 margin_right = 40.0
 margin_bottom = 40.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="StarsBg" parent="Control" instance=ExtResource( 3 )]
 
