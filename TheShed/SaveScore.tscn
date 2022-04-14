@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://SaveScore.gd" type="Script" id=1]
 [ext_resource path="res://Themes/UITheme.tres" type="Theme" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://graphics/starMapPoint9.png" type="Texture" id=5]
 [ext_resource path="res://graphics/MainBaseSkyBg.png" type="Texture" id=6]
 [ext_resource path="res://graphics/ArrowMegaUp.png" type="Texture" id=7]
+[ext_resource path="res://WalletConnectMinimal.tscn" type="PackedScene" id=8]
 
 [sub_resource type="Shader" id=1]
 code = "/*
@@ -418,9 +419,6 @@ margin_left = 311.0
 margin_top = 472.0
 margin_right = 351.0
 margin_bottom = 512.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Particles2D" type="CPUParticles2D" parent="Instructions/Arrows"]
 position = Vector2( 174, -271 )
@@ -454,35 +452,55 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="typeName" type="Label" parent="Instructions/Arrows"]
-margin_left = 2.0
-margin_top = -386.0
-margin_right = 182.0
-margin_bottom = -374.0
-rect_scale = Vector2( 2, 2 )
-text = "type your twitter handle here below:"
+[node name="score" type="Label" parent="Instructions/Arrows"]
+margin_left = -57.0
+margin_top = -395.0
+margin_right = 63.0
+margin_bottom = -383.0
+rect_scale = Vector2( 4, 4 )
+text = "0"
 align = 1
 autowrap = true
+
+[node name="Panel" parent="Instructions/Arrows" instance=ExtResource( 8 )]
+margin_left = 189.0
+margin_top = -319.0
+margin_right = 489.0
+margin_bottom = 31.0
+rect_scale = Vector2( 2, 2 )
+
+[node name="YourWalletIsLabel" type="Label" parent="Instructions/Arrows"]
+margin_left = 3.0
+margin_top = -243.0
+margin_right = 183.0
+margin_bottom = -231.0
+rect_scale = Vector2( 2, 2 )
+text = "Your Wallet is:"
+align = 1
+autowrap = true
+
+[node name="wallet" type="Label" parent="Instructions/Arrows"]
+self_modulate = Color( 1, 0, 0, 1 )
+margin_left = -59.0
+margin_top = -196.0
+margin_right = 181.0
+margin_bottom = -184.0
+rect_scale = Vector2( 2, 2 )
+text = "Not Connected"
+align = 1
+clip_text = true
 
 [node name="rememberToTweet" type="Label" parent="Instructions/Arrows"]
-margin_left = -1.0
-margin_top = -200.0
-margin_right = 179.0
-margin_bottom = -188.0
+margin_left = 10.0
+margin_top = -140.0
+margin_right = 190.0
+margin_bottom = -92.0
 rect_scale = Vector2( 2, 2 )
-text = "the button below will
-submit your score
-and auto-prepare your tweet
-to share your score"
+text = "remember to share
+your prepared tweet
+to win prizes!"
 align = 1
 autowrap = true
-
-[node name="LineEdit" type="LineEdit" parent="Instructions/Arrows"]
-margin_left = -71.0
-margin_top = -315.0
-margin_right = 134.0
-margin_bottom = -283.0
-rect_scale = Vector2( 2.5, 2.5 )
 
 [node name="Time" type="Label" parent="Instructions/Arrows"]
 visible = false
@@ -565,7 +583,7 @@ margin_top = 367.0
 margin_right = 494.0
 margin_bottom = 433.0
 rect_scale = Vector2( 2, 2 )
-text = "type TWITTER handle"
+text = "WALLET NOT CONNECTED!"
 align = 1
 autowrap = true
 __meta__ = {
@@ -590,6 +608,4 @@ texture = ExtResource( 7 )
 [node name="errorEmpty" type="AnimationPlayer" parent="EmptyNameOverlay"]
 anims/show = SubResource( 10 )
 
-[connection signal="text_changed" from="Instructions/Arrows/LineEdit" to="." method="_on_LineEdit_text_changed"]
-[connection signal="text_entered" from="Instructions/Arrows/LineEdit" to="." method="_on_LineEdit_text_entered"]
 [connection signal="pressed" from="Instructions/Arrows/Button" to="." method="_on_Button_pressed"]

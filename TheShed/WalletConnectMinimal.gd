@@ -37,6 +37,11 @@ func _ready():
 
 func setButtonsState(connected):
 	connectBtn.disabled = connected
+	if connected:
+		connectBtn.text="WALLET CONNECTED"
+	else:
+		connectBtn.text="CONNECT WALLET"
+		
 
 
 #func walletConnect(onlyIfTrusted = false):

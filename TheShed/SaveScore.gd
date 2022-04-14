@@ -3,6 +3,10 @@ extends Node2D
 var player_name := ""
 func _ready():
 	$Instructions/InstructionsAnim.play("show")
+	$Instructions/Arrows/score.text=str(Globals.score)
+	if WalletConnectionApi.wallet_connected:
+		player_name=WalletConnectionApi.wallet_address
+		$Instructions/Arrows/wallet.self_modulate=Color(0,1,0)
 #	update_leaderboard()
 
 #func _process(delta):
