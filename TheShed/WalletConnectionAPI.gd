@@ -29,7 +29,7 @@ func _ready():
 			if provider != null:
 				append_message("Phantom wallet exists in the browser\n")
 				setConnectionGlobalVar(false)
-				autoconnect_active = true
+				autoconnect_active = false
 
 				stateRestore()
 				if state.get("autoconnect") != null:
@@ -95,6 +95,8 @@ func _on_Connect_pressed():
 	if provider == null:
 		return
 	walletConnect()
+	# also, apply autoconnect on a regular connect
+	_on_Autoconnect_toggled(true)
 
 func _on_Dissconect_pressed():
 	print("disconnect pressed")

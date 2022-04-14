@@ -1,8 +1,8 @@
 tool
 extends Node2D
 
-const ScoreItem = preload("ScoreItem.tscn")
-const SWLogger = preload("../utils/SWLogger.gd")
+const ScoreItem = preload("res://UI/ScoreItem.tscn")
+const SWLogger = preload("res://addons/silent_wolf/utils/SWLogger.gd")
 
 var list_index = 0
 # Replace the leaderboard name if you're not using the default leaderboard
