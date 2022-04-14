@@ -52,15 +52,16 @@ func _input(ev):
 
 #func _input(event):
 	if Input.is_action_pressed("ui_accept"):
-#		$Bumper.play()
+		$Bumper.play()
 		$CanvasLayer/FadeScreen.show()
-#		$CanvasLayer/FadeScreen/Fade.play("fadeReady")
-		get_tree().change_scene("res://WalletScreen.tscn")
+		$CanvasLayer/FadeScreen/Fade.play("fadeReady")
+#		get_tree().change_scene("res://WalletScreen.tscn")
 
 		
 
 
 func _on_Fade_animation_finished(anim_name):
-	get_tree().change_scene("res://WalletScreen.tscn")
+#	get_tree().change_scene("res://WalletScreen.tscn")
+	get_tree().change_scene("res://Main.tscn")
 	
 	pass # Replace with function body.

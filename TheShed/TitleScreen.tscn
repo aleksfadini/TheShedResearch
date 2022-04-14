@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://TitleScreen.gd" type="Script" id=1]
 [ext_resource path="res://Themes/UITheme.tres" type="Theme" id=2]
@@ -7,6 +7,8 @@
 [ext_resource path="res://graphics/SolTunesBrandFinalWithShadow.png" type="Texture" id=5]
 [ext_resource path="res://audio/Bumper.ogg" type="AudioStream" id=6]
 [ext_resource path="res://graphics/Logo.png" type="Texture" id=7]
+[ext_resource path="res://Instructions.tscn" type="PackedScene" id=8]
+[ext_resource path="res://WalletConnectMinimal.tscn" type="PackedScene" id=9]
 
 [sub_resource type="Shader" id=1]
 code = "/*
@@ -303,62 +305,6 @@ tracks/2/keys = {
 "values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 1 ), Color( 0, 0, 0, 1 ) ]
 }
 
-[sub_resource type="Animation" id=4]
-resource_name = "pulse"
-loop = true
-tracks/0/type = "value"
-tracks/0/path = NodePath(".:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 0.5, 1 ),
-"transitions": PoolRealArray( -2, -2, 1 ),
-"update": 0,
-"values": [ Color( 1, 1, 1, 0.00784314 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0.00784314 ) ]
-}
-
-[sub_resource type="Animation" id=3]
-resource_name = "show"
-tracks/0/type = "value"
-tracks/0/path = NodePath(".:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 0.9 ),
-"transitions": PoolRealArray( -2, 1 ),
-"update": 0,
-"values": [ Color( 1, 1, 1, 0.00784314 ), Color( 1, 1, 1, 1 ) ]
-}
-
-[sub_resource type="GDScript" id=5]
-script/source = "extends AnimationPlayer
-
-
-# Declare member variables here. Examples:
-# var a = 2
-# var b = \"text\"
-
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-
-
-func _on_InstructionsAnim_animation_finished(anim_name):
-	if anim_name==\"show\":
-		play(\"pulse\")
-	pass # Replace with function body.
-"
-
 [sub_resource type="Curve" id=6]
 max_value = 4.0
 _data = [ Vector2( 0, 3.2963 ), 0.0, 0.0, 0, 0, Vector2( 0.986523, 0 ), 0.0, 0.0, 0, 0 ]
@@ -536,67 +482,7 @@ __meta__ = {
 
 [node name="StarsBg" parent="Control" instance=ExtResource( 3 )]
 
-[node name="Instructions" type="Control" parent="."]
-modulate = Color( 1, 1, 1, 0.00784314 )
-margin_right = 40.0
-margin_bottom = 40.0
-theme = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Arrows" type="Control" parent="Instructions"]
-margin_left = 330.0
-margin_top = 472.0
-margin_right = 370.0
-margin_bottom = 512.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="arrows" type="Label" parent="Instructions/Arrows"]
-margin_left = 21.0
-margin_top = -53.0
-margin_right = 171.0
-margin_bottom = -39.0
-rect_scale = Vector2( 2, 2 )
-text = "arrows or A,S,K,L to play"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="TforScore" type="Label" parent="Instructions/Arrows"]
-margin_left = -24.0
-margin_top = -27.0
-margin_right = 168.0
-margin_bottom = -13.0
-rect_scale = Vector2( 2, 2 )
-text = "press T to see score leaderboard"
-align = 1
-
-[node name="Label" type="Label" parent="Instructions/Arrows"]
-margin_left = -7.99998
-margin_top = 3.0
-margin_right = 118.0
-margin_bottom = 17.0
-rect_scale = Vector2( 3, 3 )
-text = "press SPACE to START"
-
-[node name="version" type="Label" parent="Instructions/Arrows/Label"]
-self_modulate = Color( 1, 1, 1, 0.203922 )
-margin_left = 22.3333
-margin_top = 17.0
-margin_right = 122.333
-margin_bottom = 29.0
-rect_scale = Vector2( 0.75, 0.75 )
-text = "v 0.0.03"
-align = 1
-
-[node name="InstructionsAnim" type="AnimationPlayer" parent="Instructions"]
-anims/pulse = SubResource( 4 )
-anims/show = SubResource( 3 )
-script = SubResource( 5 )
+[node name="Instructions" parent="." instance=ExtResource( 8 )]
 
 [node name="Titles" type="Control" parent="."]
 margin_right = 40.0
@@ -615,29 +501,30 @@ __meta__ = {
 
 [node name="MegaTitle" type="Control" parent="Titles/SlideFromUp"]
 modulate = Color( 1, 0, 0, 1 )
-margin_left = 1.0
-margin_top = 39.0
-margin_right = 41.0
-margin_bottom = 79.0
+margin_left = -99.0
+margin_top = 63.0
+margin_right = -59.0
+margin_bottom = 103.0
+rect_scale = Vector2( 1.2, 0.9 )
 
 [node name="Colors" type="Timer" parent="Titles/SlideFromUp/MegaTitle"]
 one_shot = true
 autostart = true
 
 [node name="The" type="Label" parent="Titles/SlideFromUp/MegaTitle"]
-margin_left = 418.0
-margin_top = 128.0
-margin_right = 458.0
-margin_bottom = 158.0
+margin_left = 411.5
+margin_top = 128.75
+margin_right = 451.5
+margin_bottom = 158.75
 rect_scale = Vector2( 10, 10 )
 text = "The
 "
 
 [node name="Shed" type="Label" parent="Titles/SlideFromUp/MegaTitle"]
-margin_left = 204.0
-margin_top = 207.0
-margin_right = 244.0
-margin_bottom = 219.0
+margin_left = 197.5
+margin_top = 207.75
+margin_right = 237.5
+margin_bottom = 219.75
 rect_scale = Vector2( 15, 12 )
 text = "Shed"
 align = 1
@@ -646,7 +533,7 @@ __meta__ = {
 }
 
 [node name="CPUParticles2D" type="CPUParticles2D" parent="Titles/SlideFromUp/MegaTitle"]
-position = Vector2( 509, 348 )
+position = Vector2( 495.5, 342.75 )
 scale = Vector2( 4, 4 )
 amount = 64
 emission_shape = 2
@@ -671,21 +558,25 @@ __meta__ = {
 }
 
 [node name="Sprite" type="Sprite" parent="Titles/SlideFromDown"]
-position = Vector2( 494.05, 78.7 )
-scale = Vector2( 0.1, 0.1 )
+position = Vector2( 381.84, 84.36 )
+scale = Vector2( 0.08, 0.08 )
 texture = ExtResource( 5 )
 
 [node name="Label" type="Label" parent="Titles/SlideFromDown"]
-margin_left = 380.05
-margin_top = 103.7
-margin_right = 460.05
-margin_bottom = 117.7
-rect_scale = Vector2( 3, 3 )
+margin_left = 306.79
+margin_top = 109.66
+margin_right = 386.79
+margin_bottom = 123.66
+rect_scale = Vector2( 2, 2 )
 text = "presents"
 align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+
+[node name="Panel" parent="Titles/SlideFromDown" instance=ExtResource( 9 )]
+margin_left = 627.0
+margin_top = 65.0
+margin_right = 927.0
+margin_bottom = 415.0
+rect_scale = Vector2( 1.8, 1.8 )
 
 [node name="SlideIn" type="AnimationPlayer" parent="Titles"]
 autoplay = "SlideIn"
@@ -700,6 +591,5 @@ stream = ExtResource( 6 )
 volume_db = -11.0
 
 [connection signal="animation_finished" from="CanvasLayer/FadeScreen/Fade" to="." method="_on_Fade_animation_finished"]
-[connection signal="animation_finished" from="Instructions/InstructionsAnim" to="Instructions/InstructionsAnim" method="_on_InstructionsAnim_animation_finished"]
 [connection signal="timeout" from="Titles/SlideFromUp/MegaTitle/Colors" to="." method="_on_Colors_timeout"]
 [connection signal="finished" from="Bumper" to="." method="_on_Bumper_finished"]
