@@ -9,9 +9,6 @@ margin_right = 300.0
 margin_bottom = 350.0
 theme = ExtResource( 2 )
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="LabelWallet" type="Label" parent="."]
 margin_left = 110.0

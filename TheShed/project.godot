@@ -54,6 +54,7 @@ config/icon="res://graphics/Logo.png"
 SilentWolf="*res://addons/silent_wolf/SilentWolf.gd"
 Globals="*res://Globals.gd"
 Assets="*res://assets.gd"
+WalletConnectionApi="*res://WalletConnectionAPI.gd"
 
 [display]
 
