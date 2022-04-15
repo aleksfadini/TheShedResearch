@@ -36,7 +36,7 @@ func save_and_tweet():
 		open_tweet()
 		Globals.next_stage=1
 		Globals.reset_score()
-		get_tree().change_scene("res://TitleScreen.tscn")
+		get_tree().change_scene("res://DisclaimerAfterScore.tscn")
 	
 func update_leaderboard():
 	yield(SilentWolf.Scores.get_high_scores(7), "sw_scores_received")

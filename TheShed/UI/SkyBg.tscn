@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://graphics/StarsBgGradient.png" type="Texture" id=1]
+
+[node name="Bg" type="Node2D"]
+position = Vector2( 13, -36 )
+z_index = -1000
+z_as_relative = false
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 174, 31 )
+scale = Vector2( 1.2, 1.2 )
+texture = ExtResource( 1 )
+centered = false

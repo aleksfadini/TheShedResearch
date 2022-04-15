@@ -1,8 +1,7 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://UI/LeaderboardTops.gd" type="Script" id=1]
 [ext_resource path="res://addons/silent_wolf/assets/fonts/Comfortaa-Bold.ttf" type="DynamicFontData" id=3]
-[ext_resource path="res://addons/silent_wolf/common/SWButton.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Themes/UITheme.tres" type="Theme" id=5]
 
 [sub_resource type="DynamicFont" id=2]
@@ -39,21 +38,25 @@ margin_bottom = 12.0
 rect_scale = Vector2( 4, 4 )
 text = "Top Players"
 
-[node name="Board" type="VBoxContainer" parent="."]
-margin_left = 12.0
-margin_top = 89.3333
-margin_right = 1212.0
-margin_bottom = 1140.33
+[node name="Scroll" type="ScrollContainer" parent="."]
+margin_left = 53.3333
+margin_top = 120.0
+margin_right = 1153.33
+margin_bottom = 820.0
+scroll_horizontal_enabled = false
+
+[node name="Board" type="VBoxContainer" parent="Scroll"]
+margin_bottom = 100.0
 theme = ExtResource( 5 )
 custom_constants/separation = 0
 
-[node name="MessageContainer" type="CenterContainer" parent="Board"]
+[node name="MessageContainer" type="CenterContainer" parent="Scroll/Board"]
 visible = false
 margin_top = 89.0
 margin_right = 1200.0
 margin_bottom = 126.0
 
-[node name="TextMessage" type="Label" parent="Board/MessageContainer"]
+[node name="TextMessage" type="Label" parent="Scroll/Board/MessageContainer"]
 margin_left = 591.0
 margin_top = 17.0
 margin_right = 608.0
@@ -62,32 +65,29 @@ custom_fonts/font = SubResource( 2 )
 text = "Loading scores..."
 valign = 1
 
-[node name="HighScores" type="CenterContainer" parent="Board"]
-margin_right = 1200.0
+[node name="HighScores" type="CenterContainer" parent="Scroll/Board"]
 margin_bottom = 100.0
 rect_min_size = Vector2( 0, 100 )
 theme = SubResource( 3 )
 
-[node name="ScoreItemContainer" type="VBoxContainer" parent="Board/HighScores"]
-margin_left = 600.0
+[node name="ScoreItemContainer" type="VBoxContainer" parent="Scroll/Board/HighScores"]
 margin_top = 50.0
-margin_right = 600.0
 margin_bottom = 50.0
 theme = ExtResource( 5 )
 
 [node name="CloseButtonContainer" type="Control" parent="."]
-margin_left = 9.33333
-margin_top = 1198.67
-margin_right = 1209.33
-margin_bottom = 1198.67
+margin_left = 72.0
+margin_top = 960.0
+margin_right = 1272.0
+margin_bottom = 960.0
 theme = ExtResource( 5 )
 
-[node name="CloseButton" parent="CloseButtonContainer" instance=ExtResource( 4 )]
-margin_left = 568.0
-margin_right = 631.0
-margin_bottom = 48.0
+[node name="CloseButton" type="Button" parent="CloseButtonContainer"]
+margin_left = 464.0
+margin_top = -102.667
+margin_right = 522.0
+margin_bottom = -70.6666
 rect_scale = Vector2( 3, 3 )
-theme = ExtResource( 5 )
-text = "Close Leaderboard"
+text = "close"
 
 [connection signal="pressed" from="CloseButtonContainer/CloseButton" to="." method="_on_CloseButton_pressed"]

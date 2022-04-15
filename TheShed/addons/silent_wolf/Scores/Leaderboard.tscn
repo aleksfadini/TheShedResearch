@@ -36,12 +36,12 @@ custom_constants/separation = 0
 
 [node name="TitleContainer" type="CenterContainer" parent="Board"]
 margin_right = 1864.0
-margin_bottom = 85.0
+margin_bottom = 2.0
 
 [node name="Label" type="Label" parent="Board/TitleContainer"]
-margin_left = 667.0
-margin_right = 1196.0
-margin_bottom = 85.0
+margin_left = 926.0
+margin_right = 937.0
+margin_bottom = 2.0
 custom_fonts/font = SubResource( 1 )
 text = "Leaderboard"
 
@@ -52,17 +52,18 @@ margin_right = 1864.0
 margin_bottom = 126.0
 
 [node name="TextMessage" type="Label" parent="Board/MessageContainer"]
-margin_left = 789.0
-margin_right = 1075.0
-margin_bottom = 37.0
+margin_left = 923.0
+margin_top = 17.0
+margin_right = 940.0
+margin_bottom = 19.0
 custom_fonts/font = SubResource( 2 )
 text = "Loading scores..."
 valign = 1
 
 [node name="HighScores" type="CenterContainer" parent="Board"]
-margin_top = 85.0
+margin_top = 2.0
 margin_right = 1864.0
-margin_bottom = 185.0
+margin_bottom = 102.0
 rect_min_size = Vector2( 0, 100 )
 theme = SubResource( 3 )
 
@@ -73,14 +74,14 @@ margin_right = 932.0
 margin_bottom = 50.0
 
 [node name="CloseButtonContainer" type="CenterContainer" parent="Board"]
-margin_top = 185.0
+margin_top = 102.0
 margin_right = 1864.0
-margin_bottom = 303.0
+margin_bottom = 150.0
 
 [node name="CloseButton" parent="Board/CloseButtonContainer" instance=ExtResource( 4 )]
-margin_left = 582.0
-margin_right = 1281.0
-margin_bottom = 118.0
+margin_left = 900.0
+margin_right = 963.0
+margin_bottom = 48.0
 text = "Close Leaderboard"
 
 [connection signal="pressed" from="Board/CloseButtonContainer/CloseButton" to="." method="_on_CloseButton_pressed"]

@@ -101,7 +101,7 @@ func add_item(player_name, score):
 			item.get_node("PlayerName").text = str(list_index) + str(". ") + player_name
 			item.get_node("Score").text = score
 			item.margin_top = list_index * 100
-			$"Board/HighScores/ScoreItemContainer".add_child(item)
+			$"Scroll/Board/HighScores/ScoreItemContainer".add_child(item)
 			array_of_existent_score_names.append(player_name)
 			display_count+=1
 		else:
@@ -109,25 +109,25 @@ func add_item(player_name, score):
 
 
 func add_no_scores_message():
-	var item = $"Board/MessageContainer/TextMessage"
+	var item = $"Scroll/Board/MessageContainer/TextMessage"
 	item.text = "No scores yet!"
-	$"Board/MessageContainer".show()
+	$"Scroll/Board/MessageContainer".show()
 	item.margin_top = 135
 
 
 func add_loading_scores_message():
-	var item = $"Board/MessageContainer/TextMessage"
+	var item = $"Scroll/Board/MessageContainer/TextMessage"
 	item.text = "Loading scores..."
-	$"Board/MessageContainer".show()
+	$"Scroll/Board/MessageContainer".show()
 	item.margin_top = 135
 
 
 func hide_message():
-	$"Board/MessageContainer".hide()
+	$"Scroll/Board/MessageContainer".hide()
 
 
 func clear_leaderboard():
-	var score_item_container = $"Board/HighScores/ScoreItemContainer"
+	var score_item_container = $"Scroll/Board/HighScores/ScoreItemContainer"
 	if score_item_container.get_child_count() > 0:
 		var children = score_item_container.get_children()
 		for c in children:

@@ -3,27 +3,27 @@
 [ext_resource path="res://Themes/UITheme.tres" type="Theme" id=2]
 
 [node name="ScoreItem" type="Panel"]
-margin_right = 782.0
+margin_right = 900.0
 margin_bottom = 76.0
 grow_horizontal = 0
 grow_vertical = 0
-rect_min_size = Vector2( 782, 76 )
+rect_min_size = Vector2( 900, 76 )
 theme = ExtResource( 2 )
 
 [node name="PlayerName" type="RichTextLabel" parent="."]
 margin_left = 8.0
 margin_top = 8.0
-margin_right = 308.0
+margin_right = 358.0
 margin_bottom = 37.0
 rect_scale = Vector2( 2, 2 )
 text = "1. Godzilla"
 scroll_active = false
 
 [node name="Score" type="Label" parent="."]
-margin_left = 589.0
-margin_top = -13.0
-margin_right = 674.0
-margin_bottom = 35.0
+margin_left = 706.0
+margin_top = -11.0
+margin_right = 791.0
+margin_bottom = 37.0
 rect_scale = Vector2( 2, 2 )
 text = "13"
 align = 2

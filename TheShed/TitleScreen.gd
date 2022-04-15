@@ -43,12 +43,12 @@ func _on_Bumper_finished():
 func _input(ev):
 	if ev is InputEventKey and ev.scancode == KEY_T and not ev.echo:
 		#code
-		get_tree().change_scene("res://Top5Wrapper.tscn")
-	if ev is InputEventKey and ev.scancode == KEY_5:
-		if Input.is_action_pressed("left") and Input.is_action_pressed("right"):
-			
-		#code
-			get_tree().change_scene("res://ScoreWrapper.tscn")
+		get_tree().change_scene("res://ScoreWrapper.tscn")
+#	if ev is InputEventKey and ev.scancode == KEY_5:
+#		if Input.is_action_pressed("left") and Input.is_action_pressed("right"):
+#
+#		#code
+#			get_tree().change_scene("res://ScoreWrapper.tscn")
 
 #func _input(event):
 	if Input.is_action_pressed("ui_accept"):
