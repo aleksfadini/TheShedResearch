@@ -32,17 +32,34 @@ margin_bottom = 20.0
 theme = ExtResource( 5 )
 
 [node name="Label" type="Label" parent="TitleContainer"]
-margin_left = 467.0
-margin_right = 533.0
-margin_bottom = 12.0
+margin_left = 313.333
+margin_top = -4.0
+margin_right = 469.333
+margin_bottom = 8.0
 rect_scale = Vector2( 4, 4 )
-text = "Top Players"
+text = "Top Scores This Epoch"
+
+[node name="EpochEnd" type="Label" parent="TitleContainer"]
+margin_left = 315.667
+margin_top = 46.6667
+margin_right = 405.667
+margin_bottom = 58.6667
+rect_scale = Vector2( 3, 3 )
+text = "Epoch Deadline:"
+
+[node name="TimeLeft" type="Label" parent="TitleContainer"]
+margin_left = 86.6667
+margin_top = 89.3333
+margin_right = 176.667
+margin_bottom = 101.333
+rect_scale = Vector2( 3, 3 )
+text = "Time Left:"
 
 [node name="Scroll" type="ScrollContainer" parent="."]
-margin_left = 53.3333
-margin_top = 120.0
-margin_right = 1153.33
-margin_bottom = 820.0
+margin_left = 149.333
+margin_top = 154.667
+margin_right = 1249.33
+margin_bottom = 854.667
 scroll_horizontal_enabled = false
 
 [node name="Board" type="VBoxContainer" parent="Scroll"]
@@ -76,10 +93,10 @@ margin_bottom = 50.0
 theme = ExtResource( 5 )
 
 [node name="CloseButtonContainer" type="Control" parent="."]
-margin_left = 72.0
-margin_top = 960.0
-margin_right = 1272.0
-margin_bottom = 960.0
+margin_left = 66.6667
+margin_top = 977.333
+margin_right = 1266.67
+margin_bottom = 977.333
 theme = ExtResource( 5 )
 
 [node name="CloseButton" type="Button" parent="CloseButtonContainer"]

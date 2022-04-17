@@ -33,6 +33,10 @@ func _ready():
 		yield(SilentWolf.Scores.get_high_scores(tot_scores_displayed), "sw_scores_received")
 		hide_message()
 		render_board(SilentWolf.Scores.scores, local_scores)
+	var time=Globals.epoch_deadline
+	var display_string : String = "%d/%02d/%02d %02d:%02d" % [time.year, time.month, time.day, time.hour, time.minute];
+	$TitleContainer/EpochEnd.text="Epoch Ends: " + display_string
+	$TitleContainer/TimeLeft.text="Time Left: " + Globals.time_left_as_string
 		
 
 
@@ -98,7 +102,7 @@ func add_item(player_name, score):
 		if not (array_of_existent_score_names.has(player_name) or playernames_hidden.has(player_name)):
 			var item = ScoreItem.instance()
 			list_index += 1
-			item.get_node("PlayerName").text = str(list_index) + str(". ") + player_name
+			item.get_node("PlayerName").text = str(list_index) + str(". ") + WalletConnectionApi.conv_wallet_to_short_string_hr(player_name)
 			item.get_node("Score").text = score
 			item.margin_top = list_index * 100
 			$"Scroll/Board/HighScores/ScoreItemContainer".add_child(item)

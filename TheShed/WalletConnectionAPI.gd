@@ -156,8 +156,8 @@ func append_message(added_text:=""):
 ##### Utilities for wallet display
 
 # This function converts a long wallet string to beginning and ending with dots, for easy display - humanly readable (hr)
-func wallet_to_short_string_hr(wallet_string:=""):
-	var chars_shown=6
+func conv_wallet_to_short_string_hr(wallet_string:=""):
+	var chars_shown=9
 	if wallet_string.length() >= 30:
 		var reduced_string = wallet_string.substr(0,chars_shown) + "..." + wallet_string.substr(wallet_string.length()-chars_shown,-1)
 		return reduced_string	

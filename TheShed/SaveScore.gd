@@ -12,7 +12,7 @@ func update_connection_status():
 	if WalletConnectionApi.wallet_connected:
 		player_name=WalletConnectionApi.wallet_address
 		$Instructions/Arrows/wallet.self_modulate=Color(0,1,0)
-		$Instructions/Arrows/wallet.text=WalletConnectionApi.wallet_to_short_string_hr(player_name)
+		$Instructions/Arrows/wallet.text=WalletConnectionApi.conv_wallet_to_short_string_hr(player_name)
 	else:
 		player_name=""
 		$Instructions/Arrows/wallet.self_modulate=Color(1,0,0)
