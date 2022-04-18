@@ -25,7 +25,7 @@ func update_connection_status():
 #			Globals.next_stage=1	
 
 func open_tweet():
-	OS.shell_open("https://twitter.com/intent/tweet?text=I%20just%20scored%20"+str(Globals.score)+"%20on%20The%20Shed%20by%20@Sol_Tunes%21%20%20%0a%0aFull%20version%20coming%20soon%2C%20where%20you%20can%20compete%20for%20WL%20spots%21%20Think%20you%20can%20beat%20me%3F%0a%0a&hashtags=SolanaNFTs%2CSolana%2CNFT%2CGameFi%2CSolTunes%2CTheShedScore%0a&url=https%3A%2F%2Fshed.soltunes.io%0a%0a")
+	OS.shell_open("https://twitter.com/intent/tweet?text=I%20just%20scored%20"+str(Globals.score)+"%20on%20The%20Shed%20by%20@Sol_Tunes%21%20%20%0a%0aTop%205%20scores%20by%20the%20end%20of%20the%20epoch%20will%20be%20airdropped%20a%20free%20SolTunes%20NFT%21%20%0a%0aThink%20you%20can%20beat%20me%3F%0a%0a&hashtags=SolanaNFTs%2CSolana%2CNFT%2CGameFi%2CSolTunes%2Cmusicnfts%2CFreeNFT%2CTheShedScore%0a&url=https%3A%2F%2Fshed.soltunes.io%0a%0a")
 #	OS.shell_open("https://twitter.com/intent/tweet?url=https%3A%2F%2Fsoltunes.io%2Ftheshed&text=I%20just%20scored%20"+str(Globals.score)+"%20on%20The%20Shed%20by%20@Sol_Tunes%21%20%20%0a%0aFull%20version%20coming%20soon%2C%20where%20you%20can%20compete%20for%20WL%20spots%21Think%20you%20can%20beat%20me%3F%0a&hashtags=SolanaNFTs%2CSolana%2CNFT%2CGameFi%2CSolTunes%2CTheShedScore")
 
 func save_and_tweet():

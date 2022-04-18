@@ -25,6 +25,7 @@ var left := []
 
 var stage:=1
 var stage_finished:=false
+var test_stage_finished:=true #for testing purposes
 
 var spacebar_active:=false
 var next_level_test=true
@@ -161,7 +162,7 @@ func _process(delta):
 		
 #	if (Input.is_action_pressed("ui_accept") or Input.is_action_pressed("ui_accept")) and not stage_finished:
 #		if spacebar_active:
-#			get_tree().change_scene("res://Exit.tscn")
+##			get_tree().change_scene("res://Exit.tscn")
 #	if $music.get_playback_position()>=5 and test_stage_finished:
 #		test_stage_finished=false
 #		_on_music_finished()
@@ -308,23 +309,23 @@ func update_streak(nr=0):
 		update_score(streak_points_50)
 	if streak==100:
 		$applause.play()
-		show_msg("Streak\n50x!!!",5)
+		show_msg("Streak\n100x!!!",5)
 		update_score(streak_points_100)
 	if streak==200:
 		$applause.play()
-		show_msg("Streak\n50x!!!",5)
+		show_msg("Streak\n200x!!!",5)
 		update_score(streak_points_200)
 	if streak==300:
 		$applause.play()
-		show_msg("Streak\n50x!!!",5)
+		show_msg("Streak\n300x!!!",5)
 		update_score(streak_points_300)
 	if streak==400:
 		$applause.play()
-		show_msg("Streak\n50x!!!",5)
+		show_msg("Streak\n400x!!!",5)
 		update_score(streak_points_400)
 	if streak==1000:
 		$applause.play()
-		show_msg("Streak\n50x!!!",5)
+		show_msg("Streak\n1000x!!!",5)
 		update_score(streak_points_1000)
 
 func show_msg(text_msg,lvl=1):
@@ -466,8 +467,6 @@ func _on_music_finished():
 	if stage==3:
 		Globals.next_stage=4
 		win()
-#		show_lvl_msg("Stage 3 completed!\nYou are not human!")
-		pass # Replace with function body.
 
 func load_next_stage():
 	$Notifications/LvlMessage.hide()
@@ -517,8 +516,8 @@ func hide_behind_game_over():
 		each_node.hide()
 	for each_node in get_tree().get_nodes_in_group("floating"):
 		each_node.hide()
-	$Notifications.hide()
-	$Notifications.modulate.a=0
+#	$Notifications.hide()
+#	$Notifications.modulate.a=0
 
 func show_score_gained(score_text):
 	$Notifications/ScoreTooltip.show_begin_msg(score_text)

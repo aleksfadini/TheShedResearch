@@ -106,7 +106,7 @@ margin_left = -20.0
 margin_top = -20.0
 margin_right = 20.0
 margin_bottom = 20.0
-rect_scale = Vector2( 3, 3 )
+rect_scale = Vector2( 1e-05, 1e-05 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -144,9 +144,6 @@ text = "1
 "
 align = 1
 autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Cont"]
 playback_speed = 0.5

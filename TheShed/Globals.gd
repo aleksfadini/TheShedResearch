@@ -11,12 +11,12 @@ var game_version=SilentWolf.config.game_version
 var epoch_deadline={
 	"year":2022,
 	"month":04,
-#	"day":25,
-	"day":18,
-#	"hour":3, #this is to convert to EST from UTC
-	"hour":17, 
-#	"minute":59
-	"minute":12
+	"day":25, #this is to convert to EST from UTC
+#	"day":18,
+	"hour":3, #this is to convert to EST from UTC
+#	"hour":17, 
+	"minute":59
+#	"minute":12
 }
 var time_left:={}
 var time_left_as_string:=""
@@ -25,6 +25,7 @@ var competition_active=true
 func _ready():
 	reset_score()
 	compare_current_time_to_epoch()
+#	SilentWolf.Scores.wipe_leaderboard()
 
 func reset_score():
 	score = 0
