@@ -474,7 +474,11 @@ func load_next_stage():
 	if not Globals.next_stage==4:
 		get_tree().change_scene("res://Main.tscn")
 	else:
-		get_tree().change_scene("res://Exit.tscn")
+		if Globals.competition_active:
+			get_tree().change_scene("res://Exit.tscn")
+		else:
+			get_tree().change_scene("res://ScoreEpochEnded.tscn")
+#		get_tree().change_scene("res://Exit.tscn")
 
 func fly_heart(halfs:=1):
 	$Notifications/FlyHeart.fly_heart(halfs)

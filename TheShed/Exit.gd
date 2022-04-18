@@ -16,6 +16,14 @@ func _ready():
 
 func _input(event):
 	if Input.is_action_pressed("ui_accept"):
+		next_score_screen()
+#	if Input.is_action_pressed("ui_cancel"):
+#		get_tree().change_scene("res://TitleScreen.tscn")
+
+func next_score_screen():
+#	Globals.compare_current_time_to_epoch()
+	if Globals.competition_active:
 		get_tree().change_scene("res://SaveScore.tscn")
-	if Input.is_action_pressed("ui_cancel"):
-		get_tree().change_scene("res://TitleScreen.tscn")
+	else:
+		get_tree().change_scene("res://ScoreEpochEnded.tscn")
+				

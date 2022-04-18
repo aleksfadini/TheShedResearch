@@ -34,7 +34,8 @@ func _ready():
 		hide_message()
 		render_board(SilentWolf.Scores.scores, local_scores)
 	var time=Globals.epoch_deadline
-	var display_string : String = "%d/%02d/%02d %02d:%02d" % [time.year, time.month, time.day, time.hour, time.minute];
+#	var display_string : String = "%d/%02d/%02d %02d:%02d" % [time.year, time.month, time.day, time.hour, time.minute];
+	var display_string : String = "2022/4/23 11:59PM - midnight EST"
 	$TitleContainer/EpochEnd.text="Epoch Ends: " + display_string
 	$TitleContainer/TimeLeft.text="Time Left: " + Globals.time_left_as_string
 		
@@ -144,3 +145,9 @@ func _on_CloseButton_pressed():
 	SWLogger.info("Closing SilentWolf leaderboard, switching to scene: " + str(scene_name))
 	#global.reset()
 	get_tree().change_scene(scene_name)
+
+
+func _on_EpochCountdown_timeout():
+	Globals.compare_current_time_to_epoch()
+	$TitleContainer/TimeLeft.text="Time Left: " + Globals.time_left_as_string
+	pass # Replace with function body.

@@ -11,9 +11,12 @@ var game_version=SilentWolf.config.game_version
 var epoch_deadline={
 	"year":2022,
 	"month":04,
-	"day":24,
-	"hour":11,
-	"minute":59,
+#	"day":25,
+	"day":18,
+#	"hour":3, #this is to convert to EST from UTC
+	"hour":17, 
+#	"minute":59
+	"minute":12
 }
 var time_left:={}
 var time_left_as_string:=""
@@ -37,8 +40,7 @@ func compare_current_time_to_epoch():
 	print("time: ", display_string)
 	var difference_in_unixtime=deadline-timestamp
 	print("difference: ",difference_in_unixtime)
-	if difference_in_unixtime <=0:
-		competition_active=false
+
 		
 		
 	var sum = deadline-timestamp
@@ -48,7 +50,11 @@ func compare_current_time_to_epoch():
 	var minutes = (sum / 60) % 60
 	var seconds = sum % 60
 #	print(str(days, " ", day_string, ", ", "%02d hours, " % hours, "", "%02d minutes " % minutes, "and %02d seconds" % seconds, " to go!"))
-	time_left_as_string=str(days, " ", day_string, ", ", "%02d hours, " % hours, "", "%02d minutes " % minutes, "and %02d seconds" % seconds, " to go!")
+	time_left_as_string=str(days, "d ", "%02dh " % hours, "", "%02dm " % minutes, "%02ds" % seconds)
+	if difference_in_unixtime <=0:
+		competition_active=false
+		time_left_as_string="EPOCH ENDED"
+#	time_left_as_long_string=str(days, " ", day_string, ", ", "%02d hours, " % hours, "", "%02d minutes " % minutes, "and %02d seconds" % seconds, " to go!")
 	
 #	time_left.day=deadline.day-time.day
 #	time_left.hour=deadline.hour-time.hour

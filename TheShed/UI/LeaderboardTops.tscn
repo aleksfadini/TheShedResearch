@@ -32,26 +32,26 @@ margin_bottom = 20.0
 theme = ExtResource( 5 )
 
 [node name="Label" type="Label" parent="TitleContainer"]
-margin_left = 313.333
-margin_top = -4.0
-margin_right = 469.333
-margin_bottom = 8.0
+margin_left = 345.333
+margin_top = -9.33333
+margin_right = 501.333
+margin_bottom = 2.66667
 rect_scale = Vector2( 4, 4 )
 text = "Top Scores This Epoch"
 
 [node name="EpochEnd" type="Label" parent="TitleContainer"]
-margin_left = 315.667
+margin_left = 197.333
 margin_top = 46.6667
-margin_right = 405.667
+margin_right = 287.333
 margin_bottom = 58.6667
 rect_scale = Vector2( 3, 3 )
 text = "Epoch Deadline:"
 
 [node name="TimeLeft" type="Label" parent="TitleContainer"]
-margin_left = 86.6667
-margin_top = 89.3333
-margin_right = 176.667
-margin_bottom = 101.333
+margin_left = 353.333
+margin_top = 85.3333
+margin_right = 443.334
+margin_bottom = 97.3333
 rect_scale = Vector2( 3, 3 )
 text = "Time Left:"
 
@@ -107,4 +107,8 @@ margin_bottom = -70.6666
 rect_scale = Vector2( 3, 3 )
 text = "close"
 
+[node name="EpochCountdown" type="Timer" parent="."]
+autostart = true
+
 [connection signal="pressed" from="CloseButtonContainer/CloseButton" to="." method="_on_CloseButton_pressed"]
+[connection signal="timeout" from="EpochCountdown" to="." method="_on_EpochCountdown_timeout"]
