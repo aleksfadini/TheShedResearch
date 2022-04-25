@@ -9,6 +9,7 @@ func _ready():
 	Globals.reset_score()
 #	SilentWolf.Scores.wipe_leaderboard()
 	pass # Replace with function body.
+	retrieve_score()
 
 func _process(delta):
 #	if Input.is_action_pressed("ui_accept") or Input.is_action_pressed("ui_accept"):
@@ -70,3 +71,19 @@ func _on_Fade_animation_finished(anim_name):
 func _on_check_pressed():
 	print("check pressed")
 	pass # Replace with function body.
+	
+func retrieve_score():
+	yield(SilentWolf.Scores.get_high_scores(200), "sw_scores_received")
+#	var Scores_as_str=str2var(str(SilentWolf.Scores.scores))[0]
+	var Scores_as_str=(str(SilentWolf.Scores.scores))[0]
+#	var Scores_as_json=(str2var(str(SilentWolf.Scores.scores)))
+#	var Scores_as_json=(str2var(str(SilentWolf.Scores.scores)))
+#	print("Scores: " + str(SilentWolf.Scores.scores))
+#	print("score json\n",Scores_as_str)
+#	var foo = Scores_as_json.result as Dictionary
+#	print("score json\n",Scores_as_str)
+	for each_score in Scores_as_str:
+#		print (each_score)
+		pass
+#		var wallet=each_score.player_name
+#		print("\nwallet:", wallet)

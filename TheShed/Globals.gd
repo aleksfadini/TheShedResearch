@@ -38,9 +38,9 @@ func compare_current_time_to_epoch():
 	var timestamp = OS.get_unix_time()
 	var time : Dictionary = OS.get_datetime_from_unix_time(timestamp);
 	var display_string : String = "%d/%02d/%02d %02d:%02d" % [time.year, time.month, time.day, time.hour, time.minute];
-	print("time: ", display_string)
+#	print("time: ", display_string)
 	var difference_in_unixtime=deadline-timestamp
-	print("difference: ",difference_in_unixtime)
+#	print("difference: ",difference_in_unixtime)
 
 		
 		

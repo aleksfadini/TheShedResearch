@@ -28,8 +28,8 @@ func _ready():
 			provider = JavaScript.get_interface("solana")
 			if provider != null:
 				append_message("Phantom wallet exists in the browser\n")
-				setConnectionGlobalVar(false)
-				autoconnect_active = false
+				setConnectionGlobalVar(true)
+				autoconnect_active = true
 
 				stateRestore()
 				if state.get("autoconnect") != null:

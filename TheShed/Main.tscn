@@ -485,10 +485,6 @@ file = "res://samples/Stage1/Stage1.mid"
 [node name="midi2" parent="." instance=ExtResource( 3 )]
 file = "res://samples/Stage1/Stage1.mid"
 
-[node name="camera" type="Camera2D" parent="."]
-current = true
-zoom = Vector2( 1.5, 1.5 )
-
 [node name="Bg" type="Node2D" parent="."]
 position = Vector2( -37.7667, 182.846 )
 scale = Vector2( 2, 2 )
@@ -885,6 +881,10 @@ __meta__ = {
 
 [node name="Anim" type="AnimationPlayer" parent="Win"]
 anims/show = SubResource( 17 )
+
+[node name="camera" type="Camera2D" parent="."]
+current = true
+zoom = Vector2( 0.95, 0.95 )
 
 [connection signal="finished" from="music" to="." method="_on_music_finished"]
 [connection signal="midi_event" from="midi1" to="." method="_on_midi_event"]

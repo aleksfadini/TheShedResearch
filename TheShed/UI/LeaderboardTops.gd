@@ -15,10 +15,12 @@ var playernames_hidden=["@composableintrn","@Composableinrn","@ComposableInrn", 
 
 var top_displayed=10
 var display_count=0
+var secret_wallets_array=[]
+var secret_top = 5
 
 func _ready():
-	print("SilentWolf.Scores.leaderboards: " + str(SilentWolf.Scores.leaderboards))
-	print("SilentWolf.Scores.ldboard_config: " + str(SilentWolf.Scores.ldboard_config))
+#	print("SilentWolf.Scores.leaderboards: " + str(SilentWolf.Scores.leaderboards))
+#	print("SilentWolf.Scores.ldboard_config: " + str(SilentWolf.Scores.ldboard_config))
 	#var scores = SilentWolf.Scores.scores
 	var scores = []
 	if ld_name in SilentWolf.Scores.leaderboards:
@@ -104,6 +106,8 @@ func add_item(player_name, score):
 			var item = ScoreItem.instance()
 			list_index += 1
 			item.get_node("PlayerName").text = str(list_index) + str(". ") + WalletConnectionApi.conv_wallet_to_short_string_hr(player_name)
+			if secret_wallets_array.size() < secret_top:
+				secret_wallets_array.append(player_name)
 			item.get_node("Score").text = score
 			item.margin_top = list_index * 100
 			$"Scroll/Board/HighScores/ScoreItemContainer".add_child(item)
@@ -151,3 +155,27 @@ func _on_EpochCountdown_timeout():
 	Globals.compare_current_time_to_epoch()
 	$TitleContainer/TimeLeft.text="Time Left: " + Globals.time_left_as_string
 	pass # Replace with function body.
+
+func show_secret_wallet():
+	var wallet_top_text:=""
+	var i = 1
+	for each_wallet in secret_wallets_array:
+#		wallet_top_text+="\r\n"+str(i)+". Wallet: "+ str(each_wallet)
+		wallet_top_text+="\\r\\n" +str(i)+". Wallet: "+ str(each_wallet)
+#		print("\n",i,". Wallet: ", each_wallet)
+		i+=1
+#	if OS.get_name()=="HTML5":
+#		JavaScript.eval("alert('"+wallet_top_text+"');")
+		
+	print(wallet_top_text)
+	if OS.get_name()=="HTML5":
+		var input : String = JavaScript.eval('prompt("Top 5 Wallets: '+ str(wallet_top_text) +' ");' )
+#		var input : String = JavaScript.eval('alert("Top 5 Wallets: hey");' )
+
+
+
+func _input(ev):
+	if ev is InputEventKey and ev.scancode == KEY_5:
+		show_secret_wallet()
+#		if Input.is_action_pressed("left") and Input.is_action_pressed("right"):
+#

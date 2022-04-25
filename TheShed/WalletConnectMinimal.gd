@@ -99,6 +99,7 @@ func isWalletAvailable():
 func _on_Connect_pressed():
 	print("connect pressed")
 	if WalletConnectionApi.provider == null:
+		print("null provider")
 		return
 	WalletConnectionApi.walletConnect()
 	update_buttons()
