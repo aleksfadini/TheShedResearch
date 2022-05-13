@@ -22,7 +22,7 @@ func _input(event):
 
 func next_score_screen():
 #	Globals.compare_current_time_to_epoch()
-	if Globals.competition_active:
+	if Globals.competition_state=="active":
 		get_tree().change_scene("res://SaveScore.tscn")
 	else:
 		get_tree().change_scene("res://ScoreEpochEnded.tscn")

@@ -22,7 +22,7 @@ onready var Multiplayer = Node.new()
 var config = {
 	"api_key": "UA4R8tLXV3aee77AAHyiW88MHGGXvRXM7rCtgAUS",
 	"game_id": "TheShed",
-	"game_version": "0.1",
+	"game_version": "0.2",
 	"log_level": 0
 }
 

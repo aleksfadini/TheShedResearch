@@ -37,9 +37,16 @@ func _ready():
 		render_board(SilentWolf.Scores.scores, local_scores)
 	var time=Globals.epoch_deadline
 #	var display_string : String = "%d/%02d/%02d %02d:%02d" % [time.year, time.month, time.day, time.hour, time.minute];
-	var display_string : String = "2022/4/23 11:59PM - midnight EST"
-	$TitleContainer/EpochEnd.text="Epoch Ends: " + display_string
-	$TitleContainer/TimeLeft.text="Time Left: " + Globals.time_left_as_string
+#	var display_string : String = "2022/4/23 11:59PM - midnight EST"
+#	var display_string : String = Globals.epoch_deadline_as_string
+	update_countdown()
+#
+#	if Globals.competition_state=="active":
+#		$TitleContainer/EpochEnd.text="Epoch Ends: " + Globals.epoch_deadline_as_string
+#		$TitleContainer/TimeLeft.text="Time Left: " + Globals.time_left_as_string
+#	elif Globals.competition_state=="incoming":
+#		$TitleContainer/EpochEnd.text="Epoch Starts: " + Globals.epoch_startline_as_string
+#		$TitleContainer/TimeLeft.text="Countdown To Start: " + Globals.time_left_as_string
 		
 
 
@@ -153,8 +160,23 @@ func _on_CloseButton_pressed():
 
 func _on_EpochCountdown_timeout():
 	Globals.compare_current_time_to_epoch()
-	$TitleContainer/TimeLeft.text="Time Left: " + Globals.time_left_as_string
+	update_countdown()
 	pass # Replace with function body.
+
+func update_countdown():
+	if Globals.competition_state=="active":
+		$TitleContainer/EpochEnd.text="Epoch Ends: " + Globals.epoch_deadline_as_string
+		$TitleContainer/TimeLeft.text="Time Left: " + Globals.time_left_as_string
+	elif Globals.competition_state=="incoming":
+		$TitleContainer/EpochEnd.text="Epoch Starts: " + Globals.epoch_startline_as_string
+		$TitleContainer/TimeLeft.text="Countdown To Start: " + Globals.time_left_as_string
+	elif Globals.competition_state=="finished":
+		$TitleContainer/EpochEnd.text="Epoch finished on " + Globals.epoch_deadline_as_string
+		$TitleContainer/TimeLeft.text="Congratulations to all players!"
+	else:
+		$TitleContainer/EpochEnd.text="Cannot confirm epoch dates."
+		$TitleContainer/TimeLeft.text="Try Reloading or contact the Soltuens team at soltunes.io"
+	
 
 func show_secret_wallet():
 	var wallet_top_text:=""

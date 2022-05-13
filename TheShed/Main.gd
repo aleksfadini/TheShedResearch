@@ -473,7 +473,7 @@ func load_next_stage():
 	if not Globals.next_stage==4:
 		get_tree().change_scene("res://Main.tscn")
 	else:
-		if Globals.competition_active:
+		if Globals.competition_state=="active":
 			get_tree().change_scene("res://Exit.tscn")
 		else:
 			get_tree().change_scene("res://ScoreEpochEnded.tscn")

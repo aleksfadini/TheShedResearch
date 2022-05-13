@@ -6,6 +6,12 @@ func _ready():
 	$Instructions/Arrows/score.text=str(Globals.score)
 	update_connection_status()
 	connect("wallet_messages_updated",self,"update_connection_status")
+	if Globals.competition_state=="finished":
+		$Instructions/Arrows/rememberToTweet.text="Unfortunately this epoch has ended. You cannot submit your score but you can tweet about it!"
+	elif Globals.competition_state=="incoming":
+		$Instructions/Arrows/rememberToTweet.text="The new epoch is not open quite yet. You cannot submit your score but you can tweet about it!"
+	else:
+		$Instructions/Arrows/rememberToTweet.text="The new epoch is not open quite yet. You cannot submit your score but you can tweet about it!"
 
 #	update_leaderboard()
 func update_connection_status():

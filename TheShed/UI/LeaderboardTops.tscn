@@ -40,20 +40,24 @@ rect_scale = Vector2( 4, 4 )
 text = "Top Scores This Epoch"
 
 [node name="EpochEnd" type="Label" parent="TitleContainer"]
-margin_left = 197.333
+margin_left = 150.0
 margin_top = 46.6667
-margin_right = 287.333
+margin_right = 450.0
 margin_bottom = 58.6667
+rect_min_size = Vector2( 300, 0 )
 rect_scale = Vector2( 3, 3 )
 text = "Epoch Deadline:"
+align = 1
 
 [node name="TimeLeft" type="Label" parent="TitleContainer"]
-margin_left = 353.333
+margin_left = 150.0
 margin_top = 85.3333
-margin_right = 443.334
+margin_right = 450.0
 margin_bottom = 97.3333
+rect_min_size = Vector2( 300, 0 )
 rect_scale = Vector2( 3, 3 )
 text = "Time Left:"
+align = 1
 
 [node name="Scroll" type="ScrollContainer" parent="."]
 margin_left = 149.333

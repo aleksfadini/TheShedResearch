@@ -31,7 +31,7 @@ func open_tweet():
 func save_and_tweet():
 	if player_name =="":
 		flash_overlay("noWallet")
-	elif not Globals.competition_active:
+	elif not Globals.competition_state=="active":
 		flash_overlay("epochEnded")
 	else:
 		SilentWolf.Scores.persist_score(player_name, Globals.score)
