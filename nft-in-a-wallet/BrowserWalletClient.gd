@@ -10,6 +10,8 @@ onready var disconnectBtn = $Dissconect
 onready var signMessageBtn = $SignMessage
 onready var autoConnect = $Autoconnect
 onready var messageForSigning = $MessageForSigning
+onready var solanaAddress = $SolanaAddress
+onready var checkNFTs = $CheckNFTs
 
 var _wallet_connected = JavaScript.create_callback(self, "walletConnected")
 var _wallet_disconnected = JavaScript.create_callback(self, "walletDisconnected")

@@ -4,7 +4,7 @@
 
 [node name="Panel" type="Panel"]
 margin_right = 994.0
-margin_bottom = 508.0
+margin_bottom = 587.0
 script = ExtResource( 1 )
 
 [node name="Connect" type="Button" parent="."]
@@ -53,7 +53,23 @@ margin_bottom = 434.0
 text = "To avoid digital dognappers, sign below to authenticate with TheShed"
 wrap_enabled = true
 
+[node name="SolanaAddress" type="TextEdit" parent="."]
+margin_left = 285.0
+margin_top = 498.0
+margin_right = 964.0
+margin_bottom = 552.0
+text = "Ddsh4MNAHfFk6K6Xo3L3ZJ9kLgLhkhEbTRG2nstiHoN9"
+wrap_enabled = true
+
+[node name="CheckNFTs" type="Button" parent="."]
+margin_left = 40.0
+margin_top = 498.0
+margin_right = 265.0
+margin_bottom = 552.0
+text = "CheckNFTs"
+
 [connection signal="pressed" from="Connect" to="." method="_on_Connect_pressed"]
 [connection signal="pressed" from="Dissconect" to="." method="_on_Dissconect_pressed"]
 [connection signal="pressed" from="SignMessage" to="." method="_on_SignMessage_pressed"]
 [connection signal="toggled" from="Autoconnect" to="." method="_on_Autoconnect_toggled"]
+[connection signal="pressed" from="CheckNFTs" to="." method="_on_SignMessage_pressed"]
