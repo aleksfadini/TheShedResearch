@@ -2,16 +2,16 @@
 #![allow(unused_variables)]
 // #![feature(type_name_of_val)]
 
+use anyhow::{anyhow, Result};
+use mpl_token_metadata::deser::meta_deser;
+use mpl_token_metadata::pda::find_metadata_account;
+use mpl_token_metadata::state::Metadata;
 use solana_client::{rpc_client::RpcClient, rpc_request::TokenAccountsFilter};
 use solana_sdk::{
     commitment_config::CommitmentConfig,
     program_pack::{IsInitialized, Pack},
     pubkey::Pubkey,
 };
-use anyhow::{anyhow, Result};
-use mpl_token_metadata::deser::meta_deser;
-use mpl_token_metadata::pda::{find_master_edition_account, find_metadata_account};
-use mpl_token_metadata::state::{Key, MasterEditionV2, Metadata, MAX_MASTER_EDITION_LEN};
 use std::{fmt::Debug, str::FromStr, time::Duration};
 
 const MAINNET_ENDPOINT: &str = "https://api.mainnet-beta.solana.com";
@@ -53,7 +53,9 @@ fn main() {
     let account = "Emb4Td3VrhsYa4jE5jMNsa8FYibWb81Y8VcKotKHibzZ";
     let mint = "7jHNVMSB6X8NgjFHGKSQCxp6AoMycFK2rNyWCjw8E2yp";
 
-    let result = client.get_token_account(&Pubkey::from_str(account).unwrap()).unwrap();
+    let result = client
+        .get_token_account(&Pubkey::from_str(account).unwrap())
+        .unwrap();
     println!("{result:#?}\n");
 
     let (account_key, account) = fetch_typed_account::<spl_token::state::Account>(&client, account);
@@ -101,7 +103,6 @@ fn fetch_account_data(client: &RpcClient, key: &str) -> (Pubkey, Vec<u8>) {
 
 pub fn find_metadata_pda(mint: &Pubkey) -> Pubkey {
     let (pda, _bump) = find_metadata_account(mint);
-
     pda
 }
 
