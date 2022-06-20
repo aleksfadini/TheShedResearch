@@ -1,5 +1,6 @@
 #![allow(dead_code)]
 #![allow(unused_variables)]
+// #![feature(type_name_of_val)]
 
 use solana_client::{rpc_client::RpcClient, rpc_request::TokenAccountsFilter};
 use solana_sdk::{
@@ -44,32 +45,41 @@ fn main() {
         .get_token_accounts_by_owner(&owner, TokenAccountsFilter::ProgramId(program_id.clone()))
         .unwrap();
 
-    println!("{}, {result:#?}", result.len());
+    println!("{}, {result:#?}\n", result.len());
 
     // let result = client.get_account(&owner).unwrap();
     // println!("{result:?}");
 
-    let token1 = Pubkey::from_str("Emb4Td3VrhsYa4jE5jMNsa8FYibWb81Y8VcKotKHibzZ").unwrap();
+    let account = "Emb4Td3VrhsYa4jE5jMNsa8FYibWb81Y8VcKotKHibzZ";
     let mint = "7jHNVMSB6X8NgjFHGKSQCxp6AoMycFK2rNyWCjw8E2yp";
 
-    let result = client.get_token_account(&token1).unwrap();
+    let result = client.get_token_account(&Pubkey::from_str(account).unwrap()).unwrap();
     println!("{result:#?}");
 
-    fetch_account::<spl_token::state::Account>(&client, token1.to_string().as_str());
-    fetch_account::<spl_token::state::Mint>(&client, mint);
-    fetch_account_data(&client, "8oozoJnyB5xbrYK6tiWcgUbK2q4Eyn6v3QA9s2uTWyJE");
+    let (account_key, account) = fetch_account::<spl_token::state::Account>(&client, account);
+    let (mint_key, mint) = fetch_account::<spl_token::state::Mint>(&client, mint);
+    // fetch_account_data(&client, "8oozoJnyB5xbrYK6tiWcgUbK2q4Eyn6v3QA9s2uTWyJE");
+
+    let (pda_key, pda) = get_metadata_pda(&mint_key, &client).unwrap();
+    // println!("key: {pda_key}\n{}: {pda:#?}", std::any::type_name_of_val(&pda));
+    println!("key: {pda_key}\n{}: {pda:#?}", std::any::type_name::<Metadata>());
+    fetch_account_data(&client, pda_key.to_string().as_str());
+
+    let data = client.get_account(&pda_key).unwrap();
+    println!("acc: {data:#?}");
 }
 
-fn fetch_account<T>(client: &RpcClient, key: &str)
+fn fetch_account<T>(client: &RpcClient, key: &str) -> (Pubkey, T)
 where
     T: Pack + IsInitialized + Debug + 'static,
 {
-    let data = fetch_account_data(client, key);
+    let (pubkey, data) = fetch_account_data(client, key);
     let account = T::unpack(&data).unwrap();
-    println!("{}: {account:#?}", std::any::type_name::<T>());
+    println!("{}: {account:#?}\n", std::any::type_name::<T>());
+    (pubkey, account)
 }
 
-fn fetch_account_data(client: &RpcClient, key: &str) -> Vec<u8> {
+fn fetch_account_data(client: &RpcClient, key: &str) -> (Pubkey, Vec<u8>) {
     let pubkey = Pubkey::from_str(key).unwrap();
     println!("key: {pubkey}");
     // let result = client.get_token_account(&pubkey).unwrap();
@@ -77,7 +87,7 @@ fn fetch_account_data(client: &RpcClient, key: &str) -> Vec<u8> {
 
     let data = client.get_account_data(&pubkey).unwrap();
     println!("data: {} {data:?}", data.len());
-    data
+    (pubkey, data)
 }
 
 pub fn find_metadata_pda(mint: &Pubkey) -> Pubkey {
