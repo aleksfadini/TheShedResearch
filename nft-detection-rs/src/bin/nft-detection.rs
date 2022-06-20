@@ -54,39 +54,48 @@ fn main() {
     let mint = "7jHNVMSB6X8NgjFHGKSQCxp6AoMycFK2rNyWCjw8E2yp";
 
     let result = client.get_token_account(&Pubkey::from_str(account).unwrap()).unwrap();
-    println!("{result:#?}");
+    println!("{result:#?}\n");
 
-    let (account_key, account) = fetch_account::<spl_token::state::Account>(&client, account);
-    let (mint_key, mint) = fetch_account::<spl_token::state::Mint>(&client, mint);
+    let (account_key, account) = fetch_typed_account::<spl_token::state::Account>(&client, account);
+    let (mint_key, mint) = fetch_typed_account::<spl_token::state::Mint>(&client, mint);
     // fetch_account_data(&client, "8oozoJnyB5xbrYK6tiWcgUbK2q4Eyn6v3QA9s2uTWyJE");
 
     let (pda_key, pda) = get_metadata_pda(&mint_key, &client).unwrap();
-    // println!("key: {pda_key}\n{}: {pda:#?}", std::any::type_name_of_val(&pda));
-    println!("key: {pda_key}\n{}: {pda:#?}", std::any::type_name::<Metadata>());
-    fetch_account_data(&client, pda_key.to_string().as_str());
-
-    let data = client.get_account(&pda_key).unwrap();
-    println!("acc: {data:#?}");
+    let account = client.get_account(&pda_key).unwrap();
+    println!("Key: {pda_key}");
+    println!("Raw account: {account:#?}");
+    // println!("{}: {pda:#?}", std::any::type_name_of_val(&pda));
+    println!("{}: {pda:#?}", std::any::type_name::<Metadata>());
+    // fetch_account_data(&client, pda_key.to_string().as_str());
 }
 
-fn fetch_account<T>(client: &RpcClient, key: &str) -> (Pubkey, T)
+fn fetch_typed_account<T>(client: &RpcClient, key: &str) -> (Pubkey, T)
 where
     T: Pack + IsInitialized + Debug + 'static,
 {
-    let (pubkey, data) = fetch_account_data(client, key);
+    let (pubkey, data) = fetch_account(client, key);
     let account = T::unpack(&data).unwrap();
-    println!("{}: {account:#?}\n", std::any::type_name::<T>());
+    println!("{} -- {account:#?}\n", std::any::type_name::<T>());
     (pubkey, account)
+}
+
+fn fetch_account(client: &RpcClient, key: &str) -> (Pubkey, Vec<u8>) {
+    let pubkey = Pubkey::from_str(key).unwrap();
+    println!("Key: {pubkey}");
+
+    let account = client.get_account(&pubkey).unwrap();
+    println!("Raw account: {account:#?}");
+    (pubkey, account.data)
 }
 
 fn fetch_account_data(client: &RpcClient, key: &str) -> (Pubkey, Vec<u8>) {
     let pubkey = Pubkey::from_str(key).unwrap();
-    println!("key: {pubkey}");
+    println!("Key: {pubkey}");
     // let result = client.get_token_account(&pubkey).unwrap();
     // println!("{result:#?}");
 
     let data = client.get_account_data(&pubkey).unwrap();
-    println!("data: {} {data:?}", data.len());
+    println!("Raw data: {} {data:?}", data.len());
     (pubkey, data)
 }
 
