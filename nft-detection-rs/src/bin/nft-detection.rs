@@ -44,7 +44,7 @@ fn main() {
     let owner = match std::env::args().nth(1) {
         Some(string) => Pubkey::from_str(&string).unwrap(),
         None => {
-            eprintln!("Usage: nft-detection <WALLET_ADDRESS>");
+            eprintln!("Usage: nft-detection <WALLET_ADDRESS> [-v]");
             exit(1);
         }
     };
@@ -61,19 +61,22 @@ fn main() {
     let result = client
         .get_token_accounts_by_owner(&owner, TokenAccountsFilter::ProgramId(program_id.clone()))
         .unwrap();
+    // println!("{}, {result:#?}\n", result.len());
 
     // let accounts: Vec<String> = result.into_iter().map(|x| (x.pubkey)).collect();
-    let accounts: Vec<String> = result.iter().map(|x| (x.pubkey.clone())).collect();
+    // let accounts: Vec<String> = result.iter().map(|x| (x.pubkey.clone())).collect();
 
     if let Some("-v") = std::env::args().nth(2).as_deref() {
-        println!("{}, {result:#?}\n", result.len());
-        for account in &accounts {
-            let info = fetch_nft_full_info(&client, &*account);
+        let sep = "-".repeat(60);
+        for account in result.iter() {
+            println!("{sep}\n{account:#?}");
+            let info = fetch_nft_full_info(&client, &account.pubkey);
             print_nft_verbose(&info);
+            println!();
         }
     } else {
-        for account in &accounts {
-            let info = fetch_nft_info(&client, &account);
+        for account in result.iter() {
+            let info = fetch_nft_info(&client, &account.pubkey);
             println!("{info:#?}");
         }
     }
@@ -95,6 +98,7 @@ struct NFTInfo {
     account: Pubkey,
     mint: Pubkey,
     name: Option<String>,
+    symbol: Option<String>,
     collection: Option<Pubkey>,
     offchain_metadata_url: Option<String>,
 }
@@ -102,17 +106,24 @@ struct NFTInfo {
 impl Debug for NFTInfo {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut t = f.debug_struct("NFTInfo");
-        if let Some(name) = &self.name {
-            t.field("name", name);
+        macro_rules! field {
+            ($name:ident) => {
+                t.field(stringify!($name), &self.$name)
+            };
         }
-        t.field("account", &self.account);
-        t.field("mint", &self.mint);
-        if let Some(collection) = &self.collection {
-            t.field("collection", collection);
+        macro_rules! field_opt {
+            ($name:ident) => {
+                if let Some(x) = &self.$name {
+                    t.field(stringify!($name), x);
+                }
+            };
         }
-        if let Some(offchain_metadata_url) = &self.offchain_metadata_url {
-            t.field("offchain_metadata_url", offchain_metadata_url);
-        }
+        field_opt!(symbol);
+        field_opt!(name);
+        field!(account);
+        field!(mint);
+        field_opt!(collection);
+        field_opt!(offchain_metadata_url);
         t.finish()
     }
 }
@@ -146,20 +157,22 @@ fn fetch_nft_info(client: &RpcClient, account: &str) -> NFTInfo {
         let account: spl_token::state::Account = to_typed_account(&account_raw);
         (account_key, account.mint)
     };
-    let (name, collection, offchain_metadata_url) = {
+    let (symbol, name, collection, offchain_metadata_url) = {
         let (mint_key, mint_raw) = fetch_account(&client, &mint.to_string());
         // let mint: spl_token::state::Mint = to_typed_account(&mint_raw);
         let (pda_key, metadata) = get_metadata(&mint_key, &client).unwrap();
         // let (pda_key, pda_raw) = fetch_account(&client, &pda_key.to_string());
         let collection = metadata.collection.unwrap().key;
+        let symbol = metadata.data.symbol.trim_end_matches('\0').to_owned();
         let name = metadata.data.name.trim_end_matches('\0').to_owned();
         let url = metadata.data.uri.trim_end_matches('\0').to_owned();
-        (name, collection, url)
+        (symbol, name, collection, url)
     };
     NFTInfo {
         account,
         mint,
         name: Some(name),
+        symbol: Some(symbol),
         collection: Some(collection),
         offchain_metadata_url: Some(offchain_metadata_url),
     }
