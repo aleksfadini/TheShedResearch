@@ -1580,7 +1580,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "nft-detection-rs"
+name = "nft-detection"
 version = "0.1.0"
 dependencies = [
  "anyhow",
