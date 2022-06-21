@@ -2,12 +2,10 @@
 // #![allow(unused_variables)]
 // #![feature(type_name_of_val)]
 
-use mpl_token_metadata::state::Metadata;
 use nft_detection::{
-    fetch_nft_full_info, fetch_nft_info, fetch_wallet_tokens, solana_client, NFTFullInfo,
-    MAINNET_ENDPOINT,
+    fetch_nft_full_info, fetch_nft_info, fetch_wallet_tokens, solana_client, Account, Metadata,
+    NFTFullInfo, Pubkey, MAINNET_ENDPOINT,
 };
-use solana_sdk::{account::Account, pubkey::Pubkey};
 use std::{fmt::Debug, str::FromStr};
 
 fn main() {

@@ -1593,6 +1593,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "nft-detection-rs"
+version = "0.1.0"
+dependencies = [
+ "nft-detection",
+]
+
+[[package]]
 name = "nix"
 version = "0.23.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
