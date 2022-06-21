@@ -7,7 +7,7 @@ use mpl_token_metadata::deser::meta_deser;
 use mpl_token_metadata::pda::find_metadata_account;
 use mpl_token_metadata::state::Metadata;
 use serde_json::{json, Value};
-use solana_account_decoder::UiAccountEncoding;
+use solana_account_decoder::{parse_token::UiTokenAccount, UiAccountEncoding};
 use solana_client::{
     rpc_client::RpcClient,
     rpc_config::{RpcAccountInfoConfig, RpcProgramAccountsConfig},
@@ -19,7 +19,7 @@ use solana_sdk::{
     program_pack::{IsInitialized, Pack},
     pubkey::Pubkey,
 };
-use std::{fmt::Debug, str::FromStr, time::Duration};
+use std::{fmt::Debug, str::FromStr, time::Duration, process::exit};
 
 const SERUM_ENDPOINT: &str = "https://solana-api.projectserum.com";
 const MAINNET_ENDPOINT: &str = "https://api.mainnet-beta.solana.com";
@@ -42,9 +42,17 @@ fn solana_client(endpoint_url: &str) -> RpcClient {
 fn main() {
     let client = solana_client(MAINNET_ENDPOINT);
 
-    let owner = Pubkey::from_str("14Bvs8pb6dvnMPDiZ3TLJ1viv19NsfpDhmDNgjB8xo3Q").unwrap();
-    let author = Pubkey::from_str("Baj5PNxRVPB4J7PxD214SWzfNqLi6288y59UVkt9S4Wx").unwrap();
-    let colletion = Pubkey::from_str("6L86wVKKJWHuobc4qDdB9gbZVu6tBctAk1M7TYxF8ch6").unwrap();
+    // let owner = Pubkey::from_str("14Bvs8pb6dvnMPDiZ3TLJ1viv19NsfpDhmDNgjB8xo3Q").unwrap();
+    // let author = Pubkey::from_str("Baj5PNxRVPB4J7PxD214SWzfNqLi6288y59UVkt9S4Wx").unwrap();
+    // let collection = Pubkey::from_str("6L86wVKKJWHuobc4qDdB9gbZVu6tBctAk1M7TYxF8ch6").unwrap();
+
+    let owner = match std::env::args().nth(1) {
+        Some(string) => Pubkey::from_str(&string).unwrap(),
+        None => {
+            eprintln!("Usage: nft-detection <WALLET_ADDRESS>");
+            exit(1);
+        }
+    };
 
     let program_id = spl_token::id();
 
@@ -52,54 +60,22 @@ fn main() {
     let result = client
         .get_token_accounts_by_owner(&owner, TokenAccountsFilter::ProgramId(program_id.clone()))
         .unwrap();
-
     println!("{}, {result:#?}\n", result.len());
 
-    // let result = client.get_account(&owner).unwrap();
-    // println!("{result:?}");
+    let accounts: Vec<String> = result.into_iter().map(|x|(x.pubkey)).collect();
+    for account in &accounts {
+        print_nft_verbose(&client, &*account);
+    }
 
-    let account = "Emb4Td3VrhsYa4jE5jMNsa8FYibWb81Y8VcKotKHibzZ";
-    let mint = "7jHNVMSB6X8NgjFHGKSQCxp6AoMycFK2rNyWCjw8E2yp";
+}
 
-    let result = client
-        .get_token_account(&Pubkey::from_str(account).unwrap())
-        .unwrap();
-    println!("{result:#?}\n");
-
+fn print_nft_verbose(client: &RpcClient, account: &str) {
     let (account_key, account) = fetch_typed_account::<spl_token::state::Account>(&client, account);
-    let (mint_key, mint) = fetch_typed_account::<spl_token::state::Mint>(&client, mint);
-    // fetch_account_data(&client, "8oozoJnyB5xbrYK6tiWcgUbK2q4Eyn6v3QA9s2uTWyJE");
-
-    let (pda_key, pda) = get_metadata_pda(&mint_key, &client).unwrap();
-    let account = client.get_account(&pda_key).unwrap();
-    println!("Key: {pda_key}");
-    println!("Raw account: {account:#?}");
-    // println!("{}: {pda:#?}", std::any::type_name_of_val(&pda));
-    println!("{}: {pda:#?}", std::any::type_name::<Metadata>());
-    // fetch_account_data(&client, pda_key.to_string().as_str());
-
-    let program_id = mpl_token_metadata::id();
-    let config = RpcProgramAccountsConfig {
-        filters: Some(vec![RpcFilterType::Memcmp(Memcmp {
-            offset: 511, // MAX_METADATA_LEN -> Option((bool, collection)) =  1 + 32 + 32 + 431 + 1 + 1 + 9 + 2 + 2
-            bytes: MemcmpEncodedBytes::Base58(colletion.to_string()),
-            encoding: None,
-        })]),
-        account_config: RpcAccountInfoConfig {
-            encoding: Some(UiAccountEncoding::Base64),
-            data_slice: None,
-            commitment: Some(CommitmentConfig {
-                commitment: CommitmentLevel::Confirmed,
-            }),
-            min_context_slot: None,
-        },
-        with_context: None,
-    };
-
-    let result = client.get_program_accounts_with_config(&program_id, config.clone());
-    println!("{result:#?}");
-
-    print_curl_request(RpcRequest::GetProgramAccounts, json!([program_id.to_string(), &config]));
+    let (mint_key, mint) =
+        fetch_typed_account::<spl_token::state::Mint>(&client, &account.mint.to_string());
+    let (pda_key, metadata) = get_metadata(&mint_key, &client).unwrap();
+    let (pda_key, _) = fetch_account(&client, &pda_key.to_string());
+    println!("{}: {metadata:#?}", std::any::type_name::<Metadata>());
 }
 
 fn fetch_typed_account<T>(client: &RpcClient, key: &str) -> (Pubkey, T)
@@ -132,14 +108,21 @@ fn fetch_account_data(client: &RpcClient, key: &str) -> (Pubkey, Vec<u8>) {
     (pubkey, data)
 }
 
-pub fn find_metadata_pda(mint: &Pubkey) -> Pubkey {
+fn fetch_token_account(client: &RpcClient, account: &str) -> (Pubkey, UiTokenAccount) {
+    let pubkey = Pubkey::from_str(account).unwrap();
+    let account = client.get_token_account(&pubkey).unwrap().unwrap();
+    println!("Token account: {account:#?}\n");
+    (pubkey, account)
+}
+
+fn find_metadata_pda(mint: &Pubkey) -> Pubkey {
     let (pda, _bump) = find_metadata_account(mint);
     pda
 }
 
-pub type PdaInfo<T> = (Pubkey, T);
+type PdaInfo<T> = (Pubkey, T);
 
-pub fn get_metadata_pda(mint: &Pubkey, client: &RpcClient) -> Result<PdaInfo<Metadata>> {
+fn get_metadata(mint: &Pubkey, client: &RpcClient) -> Result<PdaInfo<Metadata>> {
     let metadata_pubkey = find_metadata_pda(mint);
     let metadata_account = client.get_account(&metadata_pubkey).map_err(|_| {
         anyhow!(
@@ -154,6 +137,34 @@ pub fn get_metadata_pda(mint: &Pubkey, client: &RpcClient) -> Result<PdaInfo<Met
             &metadata_pubkey.to_string()
         )
     })
+}
+
+fn print_collection_related_program_accounts(client: &RpcClient, collection: &Pubkey) {
+    let program_id = mpl_token_metadata::id();
+    let config = RpcProgramAccountsConfig {
+        filters: Some(vec![RpcFilterType::Memcmp(Memcmp {
+            offset: 511, // MAX_METADATA_LEN -> Option((bool, collection)) =  1 + 32 + 32 + 431 + 1 + 1 + 9 + 2 + 2
+            bytes: MemcmpEncodedBytes::Base58(collection.to_string()),
+            encoding: None,
+        })]),
+        account_config: RpcAccountInfoConfig {
+            encoding: Some(UiAccountEncoding::Base64),
+            data_slice: None,
+            commitment: Some(CommitmentConfig {
+                commitment: CommitmentLevel::Confirmed,
+            }),
+            min_context_slot: None,
+        },
+        with_context: None,
+    };
+
+    let result = client.get_program_accounts_with_config(&program_id, config.clone());
+    println!("{result:#?}");
+
+    print_curl_request(
+        RpcRequest::GetProgramAccounts,
+        json!([program_id.to_string(), &config]),
+    );
 }
 
 // ~/.cargo/registry/src/github.com-1ecc6299db9ec823/solana-client-1.10.26/src/nonblocking/rpc_client.rs
