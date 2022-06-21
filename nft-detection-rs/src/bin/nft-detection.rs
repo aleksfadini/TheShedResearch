@@ -6,14 +6,22 @@ use anyhow::{anyhow, Result};
 use mpl_token_metadata::deser::meta_deser;
 use mpl_token_metadata::pda::find_metadata_account;
 use mpl_token_metadata::state::Metadata;
-use solana_client::{rpc_client::RpcClient, rpc_request::TokenAccountsFilter};
+use serde_json::{json, Value};
+use solana_account_decoder::UiAccountEncoding;
+use solana_client::{
+    rpc_client::RpcClient,
+    rpc_config::{RpcAccountInfoConfig, RpcProgramAccountsConfig},
+    rpc_filter::{Memcmp, MemcmpEncodedBytes, RpcFilterType},
+    rpc_request::{RpcRequest, TokenAccountsFilter},
+};
 use solana_sdk::{
-    commitment_config::CommitmentConfig,
+    commitment_config::{CommitmentConfig, CommitmentLevel},
     program_pack::{IsInitialized, Pack},
     pubkey::Pubkey,
 };
 use std::{fmt::Debug, str::FromStr, time::Duration};
 
+const SERUM_ENDPOINT: &str = "https://solana-api.projectserum.com";
 const MAINNET_ENDPOINT: &str = "https://api.mainnet-beta.solana.com";
 const DEVNET_ENDPOINT: &str = "https://api.devnet.solana.com";
 
@@ -69,6 +77,29 @@ fn main() {
     // println!("{}: {pda:#?}", std::any::type_name_of_val(&pda));
     println!("{}: {pda:#?}", std::any::type_name::<Metadata>());
     // fetch_account_data(&client, pda_key.to_string().as_str());
+
+    let program_id = mpl_token_metadata::id();
+    let config = RpcProgramAccountsConfig {
+        filters: Some(vec![RpcFilterType::Memcmp(Memcmp {
+            offset: 511, // MAX_METADATA_LEN -> Option((bool, collection)) =  1 + 32 + 32 + 431 + 1 + 1 + 9 + 2 + 2
+            bytes: MemcmpEncodedBytes::Base58(colletion.to_string()),
+            encoding: None,
+        })]),
+        account_config: RpcAccountInfoConfig {
+            encoding: Some(UiAccountEncoding::Base64),
+            data_slice: None,
+            commitment: Some(CommitmentConfig {
+                commitment: CommitmentLevel::Confirmed,
+            }),
+            min_context_slot: None,
+        },
+        with_context: None,
+    };
+
+    let result = client.get_program_accounts_with_config(&program_id, config.clone());
+    println!("{result:#?}");
+
+    print_curl_request(RpcRequest::GetProgramAccounts, json!([program_id.to_string(), &config]));
 }
 
 fn fetch_typed_account<T>(client: &RpcClient, key: &str) -> (Pubkey, T)
@@ -123,4 +154,26 @@ pub fn get_metadata_pda(mint: &Pubkey, client: &RpcClient) -> Result<PdaInfo<Met
             &metadata_pubkey.to_string()
         )
     })
+}
+
+// ~/.cargo/registry/src/github.com-1ecc6299db9ec823/solana-client-1.10.26/src/nonblocking/rpc_client.rs
+// RpcClient::get_program_accounts_with_config::4489
+
+fn build_request_json(request: RpcRequest, id: u64, params: Value) -> Value {
+    let jsonrpc = "2.0";
+    json!({
+       "jsonrpc": jsonrpc,
+       "id": id,
+       "method": format!("{}", request),
+       "params": params,
+    })
+}
+
+fn print_curl_request(request: RpcRequest, params: Value) {
+    let json = build_request_json(request, 0, params);
+    println!(
+        "curl '{}' -H 'content-type: application/json' --data-raw '{}' --compressed",
+        MAINNET_ENDPOINT,
+        json.to_string()
+    );
 }
