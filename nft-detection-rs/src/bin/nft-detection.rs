@@ -15,11 +15,12 @@ use solana_client::{
     rpc_request::{RpcRequest, TokenAccountsFilter},
 };
 use solana_sdk::{
+    account::Account,
     commitment_config::{CommitmentConfig, CommitmentLevel},
     program_pack::{IsInitialized, Pack},
     pubkey::Pubkey,
 };
-use std::{fmt::Debug, str::FromStr, time::Duration, process::exit};
+use std::{fmt::Debug, process::exit, str::FromStr, time::Duration};
 
 const SERUM_ENDPOINT: &str = "https://solana-api.projectserum.com";
 const MAINNET_ENDPOINT: &str = "https://api.mainnet-beta.solana.com";
@@ -40,12 +41,6 @@ fn solana_client(endpoint_url: &str) -> RpcClient {
 }
 
 fn main() {
-    let client = solana_client(MAINNET_ENDPOINT);
-
-    // let owner = Pubkey::from_str("14Bvs8pb6dvnMPDiZ3TLJ1viv19NsfpDhmDNgjB8xo3Q").unwrap();
-    // let author = Pubkey::from_str("Baj5PNxRVPB4J7PxD214SWzfNqLi6288y59UVkt9S4Wx").unwrap();
-    // let collection = Pubkey::from_str("6L86wVKKJWHuobc4qDdB9gbZVu6tBctAk1M7TYxF8ch6").unwrap();
-
     let owner = match std::env::args().nth(1) {
         Some(string) => Pubkey::from_str(&string).unwrap(),
         None => {
@@ -53,6 +48,12 @@ fn main() {
             exit(1);
         }
     };
+
+    let client = solana_client(MAINNET_ENDPOINT);
+
+    // let owner = Pubkey::from_str("14Bvs8pb6dvnMPDiZ3TLJ1viv19NsfpDhmDNgjB8xo3Q").unwrap();
+    // let author = Pubkey::from_str("Baj5PNxRVPB4J7PxD214SWzfNqLi6288y59UVkt9S4Wx").unwrap();
+    // let collection = Pubkey::from_str("6L86wVKKJWHuobc4qDdB9gbZVu6tBctAk1M7TYxF8ch6").unwrap();
 
     let program_id = spl_token::id();
 
@@ -62,39 +63,79 @@ fn main() {
         .unwrap();
     println!("{}, {result:#?}\n", result.len());
 
-    let accounts: Vec<String> = result.into_iter().map(|x|(x.pubkey)).collect();
+    let accounts: Vec<String> = result.into_iter().map(|x| (x.pubkey)).collect();
     for account in &accounts {
-        print_nft_verbose(&client, &*account);
+        let info = fetch_nft_info(&client, &*account);
+        print_nft_verbose(&info);
     }
-
 }
 
-fn print_nft_verbose(client: &RpcClient, account: &str) {
-    let (account_key, account) = fetch_typed_account::<spl_token::state::Account>(&client, account);
-    let (mint_key, mint) =
-        fetch_typed_account::<spl_token::state::Mint>(&client, &account.mint.to_string());
-    let (pda_key, metadata) = get_metadata(&mint_key, &client).unwrap();
-    let (pda_key, _) = fetch_account(&client, &pda_key.to_string());
-    println!("{}: {metadata:#?}", std::any::type_name::<Metadata>());
+struct NFTInfo {
+    account_key: Pubkey,
+    account_raw: Account,
+    account: spl_token::state::Account,
+    mint_key: Pubkey,
+    mint_raw: Account,
+    mint: spl_token::state::Mint,
+    pda_key: Pubkey,
+    pda_raw: Account,
+    metadata: mpl_token_metadata::state::Metadata,
 }
 
-fn fetch_typed_account<T>(client: &RpcClient, key: &str) -> (Pubkey, T)
-where
-    T: Pack + IsInitialized + Debug + 'static,
-{
-    let (pubkey, data) = fetch_account(client, key);
-    let account = T::unpack(&data).unwrap();
+fn print_nft_verbose(info: &NFTInfo) {
+    print_account(&info.account_key, &info.account_raw);
+    print_typed_account(&info.account);
+    print_account(&info.mint_key, &info.mint_raw);
+    print_typed_account(&info.mint);
+    print_account(&info.pda_key, &info.pda_raw);
+    print_typed_account(&info.metadata);
+    println!(
+        "{}: {:#?}",
+        std::any::type_name::<Metadata>(),
+        &info.metadata
+    );
+}
+
+fn print_typed_account<T: Debug>(account: &T) {
     println!("{} -- {account:#?}\n", std::any::type_name::<T>());
-    (pubkey, account)
 }
 
-fn fetch_account(client: &RpcClient, key: &str) -> (Pubkey, Vec<u8>) {
-    let pubkey = Pubkey::from_str(key).unwrap();
+fn print_account(pubkey: &Pubkey, account: &Account) {
     println!("Key: {pubkey}");
-
-    let account = client.get_account(&pubkey).unwrap();
     println!("Raw account: {account:#?}");
-    (pubkey, account.data)
+}
+
+fn fetch_nft_info(client: &RpcClient, account: &str) -> NFTInfo {
+    let (account_key, account_raw) = fetch_account(&client, account);
+    let account: spl_token::state::Account = to_typed_account(&account_raw);
+    let (mint_key, mint_raw) = fetch_account(&client, &account.mint.to_string());
+    let mint: spl_token::state::Mint = to_typed_account(&mint_raw);
+    let (pda_key, metadata) = get_metadata(&mint_key, &client).unwrap();
+    let (pda_key, pda_raw) = fetch_account(&client, &pda_key.to_string());
+    NFTInfo {
+        account_key,
+        account_raw,
+        account,
+        mint_key,
+        mint_raw,
+        mint,
+        pda_key,
+        pda_raw,
+        metadata,
+    }
+}
+
+fn to_typed_account<T>(account: &Account) -> T
+where
+    T: Pack + IsInitialized,
+{
+    T::unpack(&account.data).unwrap()
+}
+
+fn fetch_account(client: &RpcClient, key: &str) -> (Pubkey, Account) {
+    let pubkey = Pubkey::from_str(key).unwrap();
+    let account = client.get_account(&pubkey).unwrap();
+    (pubkey, account)
 }
 
 fn fetch_account_data(client: &RpcClient, key: &str) -> (Pubkey, Vec<u8>) {
