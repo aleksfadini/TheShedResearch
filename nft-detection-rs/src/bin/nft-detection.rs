@@ -1,30 +1,23 @@
-#![allow(dead_code)]
-#![allow(unused_variables)]
+// #![allow(dead_code)]
+// #![allow(unused_variables)]
 // #![feature(type_name_of_val)]
 
 use anyhow::{anyhow, Result};
 use mpl_token_metadata::deser::meta_deser;
 use mpl_token_metadata::pda::find_metadata_account;
 use mpl_token_metadata::state::Metadata;
-use serde_json::{json, Value};
-use solana_account_decoder::{parse_token::UiTokenAccount, UiAccountEncoding};
-use solana_client::{
-    rpc_client::RpcClient,
-    rpc_config::{RpcAccountInfoConfig, RpcProgramAccountsConfig},
-    rpc_filter::{Memcmp, MemcmpEncodedBytes, RpcFilterType},
-    rpc_request::{RpcRequest, TokenAccountsFilter},
-};
+use solana_client::{rpc_client::RpcClient, rpc_request::TokenAccountsFilter};
 use solana_sdk::{
     account::Account,
-    commitment_config::{CommitmentConfig, CommitmentLevel},
+    commitment_config::CommitmentConfig,
     program_pack::{IsInitialized, Pack},
     pubkey::Pubkey,
 };
-use std::{fmt::Debug, process::exit, str::FromStr, time::Duration};
+use std::{fmt::Debug, str::FromStr, time::Duration};
 
-const SERUM_ENDPOINT: &str = "https://solana-api.projectserum.com";
+// const SERUM_ENDPOINT: &str = "https://solana-api.projectserum.com";
 const MAINNET_ENDPOINT: &str = "https://api.mainnet-beta.solana.com";
-const DEVNET_ENDPOINT: &str = "https://api.devnet.solana.com";
+// const DEVNET_ENDPOINT: &str = "https://api.devnet.solana.com";
 
 fn solana_client(endpoint_url: &str) -> RpcClient {
     let url = endpoint_url.to_string();
@@ -45,26 +38,14 @@ fn main() {
         Some(string) => Pubkey::from_str(&string).unwrap(),
         None => {
             eprintln!("Usage: nft-detection <WALLET_ADDRESS> [-v]");
-            exit(1);
+            std::process::exit(1);
         }
     };
-
-    let client = solana_client(MAINNET_ENDPOINT);
-
-    // let owner = Pubkey::from_str("14Bvs8pb6dvnMPDiZ3TLJ1viv19NsfpDhmDNgjB8xo3Q").unwrap();
-    // let author = Pubkey::from_str("Baj5PNxRVPB4J7PxD214SWzfNqLi6288y59UVkt9S4Wx").unwrap();
-    // let collection = Pubkey::from_str("6L86wVKKJWHuobc4qDdB9gbZVu6tBctAk1M7TYxF8ch6").unwrap();
-
     let program_id = spl_token::id();
-
-    // client.get_program_accounts_with_config(pubkey, config)
+    let client = solana_client(MAINNET_ENDPOINT);
     let result = client
         .get_token_accounts_by_owner(&owner, TokenAccountsFilter::ProgramId(program_id.clone()))
         .unwrap();
-    // println!("{}, {result:#?}\n", result.len());
-
-    // let accounts: Vec<String> = result.into_iter().map(|x| (x.pubkey)).collect();
-    // let accounts: Vec<String> = result.iter().map(|x| (x.pubkey.clone())).collect();
 
     if let Some("-v") = std::env::args().nth(2).as_deref() {
         let sep = "-".repeat(60);
@@ -158,10 +139,8 @@ fn fetch_nft_info(client: &RpcClient, account: &str) -> NFTInfo {
         (account_key, account.mint)
     };
     let (symbol, name, collection, offchain_metadata_url) = {
-        let (mint_key, mint_raw) = fetch_account(&client, &mint.to_string());
-        // let mint: spl_token::state::Mint = to_typed_account(&mint_raw);
-        let (pda_key, metadata) = get_metadata(&mint_key, &client).unwrap();
-        // let (pda_key, pda_raw) = fetch_account(&client, &pda_key.to_string());
+        let (mint_key, _) = fetch_account(&client, &mint.to_string());
+        let (_, metadata) = get_metadata(&mint_key, &client).unwrap();
         let collection = metadata.collection.unwrap().key;
         let symbol = metadata.data.symbol.trim_end_matches('\0').to_owned();
         let name = metadata.data.name.trim_end_matches('\0').to_owned();
@@ -211,24 +190,6 @@ fn fetch_account(client: &RpcClient, key: &str) -> (Pubkey, Account) {
     (pubkey, account)
 }
 
-fn fetch_account_data(client: &RpcClient, key: &str) -> (Pubkey, Vec<u8>) {
-    let pubkey = Pubkey::from_str(key).unwrap();
-    println!("Key: {pubkey}");
-    // let result = client.get_token_account(&pubkey).unwrap();
-    // println!("{result:#?}");
-
-    let data = client.get_account_data(&pubkey).unwrap();
-    println!("Raw data: {} {data:?}", data.len());
-    (pubkey, data)
-}
-
-fn fetch_token_account(client: &RpcClient, account: &str) -> (Pubkey, UiTokenAccount) {
-    let pubkey = Pubkey::from_str(account).unwrap();
-    let account = client.get_token_account(&pubkey).unwrap().unwrap();
-    println!("Token account: {account:#?}\n");
-    (pubkey, account)
-}
-
 fn find_metadata_pda(mint: &Pubkey) -> Pubkey {
     let (pda, _bump) = find_metadata_account(mint);
     pda
@@ -251,54 +212,4 @@ fn get_metadata(mint: &Pubkey, client: &RpcClient) -> Result<PdaInfo<Metadata>> 
             &metadata_pubkey.to_string()
         )
     })
-}
-
-fn print_collection_related_program_accounts(client: &RpcClient, collection: &Pubkey) {
-    let program_id = mpl_token_metadata::id();
-    let config = RpcProgramAccountsConfig {
-        filters: Some(vec![RpcFilterType::Memcmp(Memcmp {
-            offset: 511, // MAX_METADATA_LEN -> Option((bool, collection)) =  1 + 32 + 32 + 431 + 1 + 1 + 9 + 2 + 2
-            bytes: MemcmpEncodedBytes::Base58(collection.to_string()),
-            encoding: None,
-        })]),
-        account_config: RpcAccountInfoConfig {
-            encoding: Some(UiAccountEncoding::Base64),
-            data_slice: None,
-            commitment: Some(CommitmentConfig {
-                commitment: CommitmentLevel::Confirmed,
-            }),
-            min_context_slot: None,
-        },
-        with_context: None,
-    };
-
-    let result = client.get_program_accounts_with_config(&program_id, config.clone());
-    println!("{result:#?}");
-
-    print_curl_request(
-        RpcRequest::GetProgramAccounts,
-        json!([program_id.to_string(), &config]),
-    );
-}
-
-// ~/.cargo/registry/src/github.com-1ecc6299db9ec823/solana-client-1.10.26/src/nonblocking/rpc_client.rs
-// RpcClient::get_program_accounts_with_config::4489
-
-fn build_request_json(request: RpcRequest, id: u64, params: Value) -> Value {
-    let jsonrpc = "2.0";
-    json!({
-       "jsonrpc": jsonrpc,
-       "id": id,
-       "method": format!("{}", request),
-       "params": params,
-    })
-}
-
-fn print_curl_request(request: RpcRequest, params: Value) {
-    let json = build_request_json(request, 0, params);
-    println!(
-        "curl '{}' -H 'content-type: application/json' --data-raw '{}' --compressed",
-        MAINNET_ENDPOINT,
-        json.to_string()
-    );
 }
