@@ -61,16 +61,25 @@ fn main() {
     let result = client
         .get_token_accounts_by_owner(&owner, TokenAccountsFilter::ProgramId(program_id.clone()))
         .unwrap();
-    println!("{}, {result:#?}\n", result.len());
 
-    let accounts: Vec<String> = result.into_iter().map(|x| (x.pubkey)).collect();
-    for account in &accounts {
-        let info = fetch_nft_info(&client, &*account);
-        print_nft_verbose(&info);
+    // let accounts: Vec<String> = result.into_iter().map(|x| (x.pubkey)).collect();
+    let accounts: Vec<String> = result.iter().map(|x| (x.pubkey.clone())).collect();
+
+    if let Some("-v") = std::env::args().nth(2).as_deref() {
+        println!("{}, {result:#?}\n", result.len());
+        for account in &accounts {
+            let info = fetch_nft_full_info(&client, &*account);
+            print_nft_verbose(&info);
+        }
+    } else {
+        for account in &accounts {
+            let info = fetch_nft_info(&client, &account);
+            println!("{info:#?}");
+        }
     }
 }
 
-struct NFTInfo {
+struct NFTFullInfo {
     account_key: Pubkey,
     account_raw: Account,
     account: spl_token::state::Account,
@@ -82,7 +91,33 @@ struct NFTInfo {
     metadata: mpl_token_metadata::state::Metadata,
 }
 
-fn print_nft_verbose(info: &NFTInfo) {
+struct NFTInfo {
+    account: Pubkey,
+    mint: Pubkey,
+    name: Option<String>,
+    collection: Option<Pubkey>,
+    offchain_metadata_url: Option<String>,
+}
+
+impl Debug for NFTInfo {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let mut t = f.debug_struct("NFTInfo");
+        if let Some(name) = &self.name {
+            t.field("name", name);
+        }
+        t.field("account", &self.account);
+        t.field("mint", &self.mint);
+        if let Some(collection) = &self.collection {
+            t.field("collection", collection);
+        }
+        if let Some(offchain_metadata_url) = &self.offchain_metadata_url {
+            t.field("offchain_metadata_url", offchain_metadata_url);
+        }
+        t.finish()
+    }
+}
+
+fn print_nft_verbose(info: &NFTFullInfo) {
     print_account(&info.account_key, &info.account_raw);
     print_typed_account(&info.account);
     print_account(&info.mint_key, &info.mint_raw);
@@ -106,13 +141,38 @@ fn print_account(pubkey: &Pubkey, account: &Account) {
 }
 
 fn fetch_nft_info(client: &RpcClient, account: &str) -> NFTInfo {
+    let (account, mint) = {
+        let (account_key, account_raw) = fetch_account(&client, account);
+        let account: spl_token::state::Account = to_typed_account(&account_raw);
+        (account_key, account.mint)
+    };
+    let (name, collection, offchain_metadata_url) = {
+        let (mint_key, mint_raw) = fetch_account(&client, &mint.to_string());
+        // let mint: spl_token::state::Mint = to_typed_account(&mint_raw);
+        let (pda_key, metadata) = get_metadata(&mint_key, &client).unwrap();
+        // let (pda_key, pda_raw) = fetch_account(&client, &pda_key.to_string());
+        let collection = metadata.collection.unwrap().key;
+        let name = metadata.data.name.trim_end_matches('\0').to_owned();
+        let url = metadata.data.uri.trim_end_matches('\0').to_owned();
+        (name, collection, url)
+    };
+    NFTInfo {
+        account,
+        mint,
+        name: Some(name),
+        collection: Some(collection),
+        offchain_metadata_url: Some(offchain_metadata_url),
+    }
+}
+
+fn fetch_nft_full_info(client: &RpcClient, account: &str) -> NFTFullInfo {
     let (account_key, account_raw) = fetch_account(&client, account);
     let account: spl_token::state::Account = to_typed_account(&account_raw);
     let (mint_key, mint_raw) = fetch_account(&client, &account.mint.to_string());
     let mint: spl_token::state::Mint = to_typed_account(&mint_raw);
     let (pda_key, metadata) = get_metadata(&mint_key, &client).unwrap();
     let (pda_key, pda_raw) = fetch_account(&client, &pda_key.to_string());
-    NFTInfo {
+    NFTFullInfo {
         account_key,
         account_raw,
         account,
