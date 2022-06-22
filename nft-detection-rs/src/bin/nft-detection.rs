@@ -2,25 +2,46 @@
 // #![allow(unused_variables)]
 // #![feature(type_name_of_val)]
 
+use clap::{arg, command, ArgMatches, ArgAction, Arg};
 use nft_detection::{
     fetch_nft_full_info, fetch_nft_info, fetch_wallet_tokens, solana_client, Account, Metadata,
     NFTFullInfo, Pubkey, MAINNET_ENDPOINT,
 };
 use std::{fmt::Debug, str::FromStr};
 
+fn arg_matches() -> ArgMatches {
+    let matches = command!()
+        .arg(arg!(<WALLET_ADDRESS>))
+        .arg(arg!([COLLECTION_ADDRESS]))
+        .arg(
+            Arg::new("verbose")
+                .short('v')
+                .long("verbose")
+                .action(ArgAction::SetTrue),
+        )
+        .get_matches();
+    matches
+}
+
+fn arg_pubkey(msg: &str) -> impl Fn(&String) -> Pubkey + '_ {
+    |s: &String| Pubkey::from_str(s.as_str()).expect(msg)
+}
+
 fn main() {
-    let owner = match std::env::args().nth(1) {
-        Some(string) => Pubkey::from_str(&string).unwrap(),
-        None => {
-            eprintln!("Usage: nft-detection <WALLET_ADDRESS> [-v]");
-            std::process::exit(1);
-        }
-    };
+    let matches = arg_matches();
+    let wallet_address: Pubkey = matches
+        .get_one("WALLET_ADDRESS")
+        .map(arg_pubkey("Wallet address isn't valid"))
+        .expect("Wallet address is required");
+    let collection_address = matches
+        .get_one("COLLECTION_ADDRESS")
+        .map(arg_pubkey("Collection address isn't valid"));
+    let verbose: Option<&bool> = matches.get_one("verbose");
 
     let client = solana_client(MAINNET_ENDPOINT);
-    let result = fetch_wallet_tokens(&client, &owner);
+    let result = fetch_wallet_tokens(&client, &wallet_address);
 
-    if let Some("-v") = std::env::args().nth(2).as_deref() {
+    if let Some(true) = verbose {
         let sep = "-".repeat(60);
         for account in result.iter() {
             println!("{sep}\n{account:#?}");

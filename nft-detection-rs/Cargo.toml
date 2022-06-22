@@ -8,6 +8,8 @@ edition = "2021"
 [dependencies]
 nft-detection = { path = "nft-detection" }
 
+clap = { version = "3.2.6", features = ["cargo"] }
+
 [[bin]]
 name = "nft-detection"
 
