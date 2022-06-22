@@ -13,3 +13,7 @@ clap = { version = "3.2.6", features = ["cargo"] }
 [[bin]]
 name = "nft-detection"
 
+[workspace]
+members = [
+    "nft-detection",
+]
