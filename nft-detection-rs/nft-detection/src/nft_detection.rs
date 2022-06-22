@@ -77,11 +77,11 @@ pub fn solana_client(endpoint_url: &str) -> RpcClient {
     client
 }
 
-pub fn filter_wallet_nfts(
-    accounts: Vec<NFTInfo>,
+pub fn filter_collection_nfts(
+    accounts: impl Iterator<Item = NFTInfo>,
     collection_address: Option<Pubkey>,
 ) -> impl Iterator<Item = NFTInfo> {
-    let x = accounts.into_iter().filter_map(move |info| {
+    let x = accounts.filter_map(move |info| {
         if collection_address.is_none() || collection_address == info.collection {
             Some(info)
         } else {
@@ -89,6 +89,13 @@ pub fn filter_wallet_nfts(
         }
     });
     x
+}
+
+pub fn fetch_wallet_nfts(client: &RpcClient, tokens: &[RpcKeyedAccount]) -> Vec<NFTInfo> {
+    tokens
+        .iter()
+        .map(|account| fetch_nft_info(client, &account.pubkey))
+        .collect()
 }
 
 pub fn fetch_wallet_tokens(client: &RpcClient, owner: &Pubkey) -> Vec<RpcKeyedAccount> {

@@ -4,8 +4,8 @@
 
 use clap::{arg, command, Arg, ArgAction, ArgMatches};
 use nft_detection::{
-    fetch_nft_full_info, fetch_nft_info, fetch_wallet_tokens, solana_client, Account, Metadata,
-    NFTFullInfo, Pubkey, MAINNET_ENDPOINT,
+    fetch_nft_full_info, fetch_wallet_nfts, fetch_wallet_tokens, filter_collection_nfts,
+    solana_client, Account, Metadata, NFTFullInfo, Pubkey, MAINNET_ENDPOINT,
 };
 use std::{fmt::Debug, str::FromStr};
 
@@ -39,11 +39,10 @@ fn main() {
     let verbose: Option<&bool> = matches.get_one("verbose");
 
     let client = solana_client(MAINNET_ENDPOINT);
-    let result = fetch_wallet_tokens(&client, &wallet_address);
+    let tokens = fetch_wallet_tokens(&client, &wallet_address);
 
-    let accounts = result.iter();
     if let Some(true) = verbose {
-        let infos = accounts.filter_map(|account| {
+        let infos = tokens.iter().filter_map(|account| {
             let info = fetch_nft_full_info(&client, &account.pubkey);
             if collection_address.is_none()
                 || collection_address == info.metadata.collection.as_ref().map(|x| x.key)
@@ -60,15 +59,9 @@ fn main() {
             println!();
         }
     } else {
-        let infos = accounts.filter_map(|account| {
-            let info = fetch_nft_info(&client, &account.pubkey);
-            if collection_address.is_none() || collection_address == info.collection {
-                Some(info)
-            } else {
-                None
-            }
-        });
-        for info in infos {
+        let nfts = fetch_wallet_nfts(&client, &tokens);
+        let nfts = filter_collection_nfts(nfts.into_iter(), collection_address);
+        for info in nfts {
             println!("{info:#?}");
         }
     }
