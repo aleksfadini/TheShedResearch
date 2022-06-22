@@ -1,4 +1,4 @@
-[gd_scene load_steps=50 format=2]
+[gd_scene load_steps=45 format=2]
 
 [ext_resource path="res://Main.gd" type="Script" id=1]
 [ext_resource path="res://samples/Stage1/Stage1_100_Hats.ogg" type="AudioStream" id=2]
@@ -15,13 +15,8 @@
 [ext_resource path="res://graphics/HarmonistHairBrownPieces.png" type="Texture" id=13]
 [ext_resource path="res://graphics/HarmonistLegsRobot.png" type="Texture" id=14]
 [ext_resource path="res://graphics/HarmonistInstrumentRoboKeysT1.png" type="Texture" id=15]
-[ext_resource path="res://graphics/DrummerHairBlondDredd.png" type="Texture" id=16]
+[ext_resource path="res://prefabs/ToonParts.tscn" type="PackedScene" id=16]
 [ext_resource path="res://graphics/HarmonistShadow.png" type="Texture" id=17]
-[ext_resource path="res://graphics/BassistLegsAlien.png" type="Texture" id=18]
-[ext_resource path="res://graphics/BassistShadow.png" type="Texture" id=19]
-[ext_resource path="res://graphics/BassistBodyAlienT4.png" type="Texture" id=20]
-[ext_resource path="res://graphics/BassistInstrumentSpaceBassT4.png" type="Texture" id=21]
-[ext_resource path="res://graphics/BassistEyes01.png" type="Texture" id=22]
 [ext_resource path="res://graphics/HarmonistEyes01.png" type="Texture" id=23]
 [ext_resource path="res://Musicians.gd" type="Script" id=24]
 [ext_resource path="res://samples/Stage1/Stage1_100_Kick.ogg" type="AudioStream" id=25]
@@ -499,34 +494,7 @@ position = Vector2( -79, 6 )
 scale = Vector2( 0.5, 0.5 )
 script = ExtResource( 24 )
 
-[node name="Bassist" type="Node2D" parent="Musicians"]
-position = Vector2( 256, -500 )
-scale = Vector2( 10, 10 )
-
-[node name="Legs" type="Sprite" parent="Musicians/Bassist"]
-texture = ExtResource( 18 )
-
-[node name="Body" type="Sprite" parent="Musicians/Bassist"]
-texture = ExtResource( 20 )
-
-[node name="Clothes" type="Sprite" parent="Musicians/Bassist"]
-visible = false
-texture = ExtResource( 11 )
-
-[node name="Eyes" type="Sprite" parent="Musicians/Bassist"]
-texture = ExtResource( 22 )
-
-[node name="Hair" type="Sprite" parent="Musicians/Bassist"]
-visible = false
-texture = ExtResource( 16 )
-
-[node name="Instrument" type="Sprite" parent="Musicians/Bassist"]
-texture = ExtResource( 21 )
-
-[node name="Shadow" type="Sprite" parent="Musicians/Bassist"]
-modulate = Color( 0, 0, 0, 1 )
-self_modulate = Color( 1, 1, 1, 0.333333 )
-texture = ExtResource( 19 )
+[node name="Bassist" parent="Musicians" instance=ExtResource( 16 )]
 
 [node name="Harmonist" type="Node2D" parent="Musicians"]
 position = Vector2( 256, -500 )
