@@ -5,7 +5,7 @@
 use clap::{arg, command, Arg, ArgAction, ArgMatches};
 use nft_detection::{
     fetch_nft_full_info, fetch_nft_info, fetch_wallet_tokens, solana_client, Account, Metadata,
-    NFTFullInfo, NFTInfo, Pubkey, RpcKeyedAccount, MAINNET_ENDPOINT,
+    NFTFullInfo, Pubkey, MAINNET_ENDPOINT,
 };
 use std::{fmt::Debug, str::FromStr};
 
@@ -43,20 +43,16 @@ fn main() {
 
     let accounts = result.iter();
     if let Some(true) = verbose {
-        let infos: Vec<(&RpcKeyedAccount, NFTFullInfo)> = match collection_address {
-            Some(pubkey) => accounts
-                .filter_map(|account| {
-                    let info = fetch_nft_full_info(&client, &account.pubkey);
-                    match info.metadata.collection {
-                        Some(ref collection) if collection.key == pubkey => Some((account, info)),
-                        _ => None,
-                    }
-                })
-                .collect(),
-            None => accounts
-                .map(|account| (account, fetch_nft_full_info(&client, &account.pubkey)))
-                .collect(),
-        };
+        let infos = accounts.filter_map(|account| {
+            let info = fetch_nft_full_info(&client, &account.pubkey);
+            if collection_address.is_none()
+                || collection_address == info.metadata.collection.as_ref().map(|x| x.key)
+            {
+                Some((account, info))
+            } else {
+                None
+            }
+        });
         let sep = "-".repeat(60);
         for (account, info) in infos {
             println!("{sep}\n{account:#?}");
@@ -64,20 +60,14 @@ fn main() {
             println!();
         }
     } else {
-        let infos: Vec<NFTInfo> = match collection_address {
-            Some(pubkey) => accounts
-                .filter_map(|account| {
-                    let info = fetch_nft_info(&client, &account.pubkey);
-                    match info.collection {
-                        Some(collection) if collection == pubkey => Some(info),
-                        _ => None,
-                    }
-                })
-                .collect(),
-            None => accounts
-                .map(|account| fetch_nft_info(&client, &account.pubkey))
-                .collect(),
-        };
+        let infos = accounts.filter_map(|account| {
+            let info = fetch_nft_info(&client, &account.pubkey);
+            if collection_address.is_none() || collection_address == info.collection {
+                Some(info)
+            } else {
+                None
+            }
+        });
         for info in infos {
             println!("{info:#?}");
         }
