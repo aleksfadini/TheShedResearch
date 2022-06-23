@@ -1610,7 +1610,6 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "mpl-token-metadata",
- "serde_json",
  "solana-account-decoder",
  "solana-client",
  "solana-sdk",
